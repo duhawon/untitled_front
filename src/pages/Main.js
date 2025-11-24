@@ -1,9 +1,10 @@
 import React from "react";
+import SimpleSlider from '../components/Banner/SimpleSlider';
 import Layout from '../components/Layout/Layout';
 const Main = () => {
     return (
         <Layout>
-        <p>메인 페이지</p>
+        <SimpleSlider />
         </Layout>
     );
 }
