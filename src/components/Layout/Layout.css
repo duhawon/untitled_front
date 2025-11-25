@@ -1,0 +1,12 @@
+.layout-wrapper {
+    width: 100%;
+  }
+  
+  /* 페이지 공통 좌우 여백 + 가운데 정렬 */
+  .layout-content {
+    max-width: 1200px;   /* 중앙 최대 너비 */
+    margin: 0 auto;      /* 가운데 정렬 */
+    padding: 0 32px;     /* 좌우 여백 */
+    box-sizing: border-box;
+  }
+  
