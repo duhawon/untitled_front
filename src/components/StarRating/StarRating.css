@@ -1,0 +1,37 @@
+.star-rating-wrap {
+  display: flex;
+  flex-direction: column; /* 별 아래로 note */
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.star-rating {
+  display: flex;
+  gap: 4px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.star {
+  color: #ddd;
+  position: relative;
+  display: inline-block;
+}
+
+.star.full {
+  color: gold;
+}
+
+.star.half::after {
+  content: "★";
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: gold;
+}
+
+.rating-note {
+  font-size: 12px;
+  color: #555;
+}
