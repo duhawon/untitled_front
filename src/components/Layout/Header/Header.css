@@ -1,0 +1,56 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+}
+
+/* ==== 왼쪽 로고 ==== */
+.header-left .logo {
+    height: 25px; /* ⬅ 요청한 대로 크기 확장 */
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* ==== 오른쪽 메뉴 ==== */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* 검색창 */
+.search-input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 180px;
+    font-size: 14px;
+}
+
+.menu-item {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.user-name {
+    font-weight: bold;
+}
+
+/* 버튼 */
+.header-btn {
+    padding: 6px 12px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.header-btn:hover {
+    opacity: 0.85;
+}

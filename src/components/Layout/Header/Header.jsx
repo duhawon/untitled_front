@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login, logout } from '../../../store/actions/userActions';
 import Login from '../../../pages/Login';
 import Signup from '../../../pages/Signup';
+import './Header.css';
 
 const dummyUser = {
     id: 1,
@@ -21,23 +22,41 @@ const Header = () => {
     const openSignup = () => setIsSignupOpen(true);
 
     return (
-        <div className="header">
-            <div className="logo">logo</div>
-            <div className="search">검색창</div>
-            {isLoggedIn ? (
-                <>
-                    <div>기록하기</div>
-                    <div>소식</div>
-                    <div>{userInfo.name}</div>
-                    <button onClick={() => dispatch(logout())}>로그아웃</button>
-                </>
-            ) : (
-                <>
-                    <button onClick={openLogin}>로그인</button>
-                    <button onClick={openSignup}>회원가입</button>
-                </>
-            )}
+        <header className="header">
+            {/* 왼쪽 로고 영역 */}
+            <div className="header-left">
+                <img src="/logo.png" alt="탈출록 로고" className="logo" />
+            </div>
 
+            {/* 오른쪽 메뉴 */}
+            <div className="header-right">
+                <input className="search-input" placeholder="방탈출 검색..." />
+
+                {isLoggedIn ? (
+                    <>
+                        <div className="menu-item">기록하기</div>
+                        <div className="menu-item">소식</div>
+                        <div className="menu-item user-name">{userInfo.name}</div>
+                        <button
+                            className="header-btn"
+                            onClick={() => dispatch(logout())}
+                        >
+                            로그아웃
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <button className="header-btn" onClick={openLogin}>
+                            로그인
+                        </button>
+                        <button className="header-btn" onClick={openSignup}>
+                            회원가입
+                        </button>
+                    </>
+                )}
+            </div>
+
+            {/* 로그인 모달 */}
             <Login
                 isOpen={isLoginOpen}
                 onClose={() => setIsLoginOpen(false)}
@@ -48,6 +67,7 @@ const Header = () => {
                 }}
             />
 
+            {/* 회원가입 모달 */}
             <Signup
                 isOpen={isSignupOpen}
                 onClose={() => setIsSignupOpen(false)}
@@ -57,7 +77,7 @@ const Header = () => {
                     setIsSignupOpen(false);
                 }}
             />
-        </div>
+        </header>
     );
 };
 
