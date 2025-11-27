@@ -1,11 +1,17 @@
 .room-detail-container {
-  padding: 0;   /* Layout에서 여백 관리하므로 여기선 유지 */
   display: flex;
-  gap: 0;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
+  flex-direction: column; /* 세로 방향으로 쌓기 */
+  gap: 40px;
+  padding: 0;
+}
+
+/* 상단 포스터+정보 row */
+.room-top-row {
+  display: flex;
+  gap: 35px;
+  width: 100%;
   align-items: flex-start;
-  min-height: 700px;
+  flex-wrap: wrap;
 }
 
 /* 이미지 영역 */
@@ -16,8 +22,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-top: 10px;
-  margin-right: 35px;
 }
 
 .poster-img {
@@ -89,12 +93,6 @@
   color: #555;
 }
 
-.rating-note {
-  font-size: 12px;
-  color: #555;
-  margin-top: 4px;
-}
-
 /* 구분선 */
 .detail-hr {
   border: none;
@@ -155,7 +153,7 @@
 
 /* 반응형 */
 @media (max-width: 900px) {
-  .room-detail-container {
+  .room-top-row {
     flex-direction: column;
     align-items: center;
   }
@@ -181,5 +179,58 @@
   .action-btn {
     width: 100%;
     margin: 4px 0;
+  }
+}
+
+/* ========================= */
+/*    코멘트 섹션 스타일     */
+/* ========================= */
+
+.comment-section {
+  width: 100%;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.comment-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.comment-count {
+  font-size: 18px;
+  color: #777;
+}
+
+.comment-more {
+  margin-left: auto;
+  border: none;
+  background: none;
+  color: #007aff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* 카드 리스트 (3개 × 2줄) */
+.comment-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .comment-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .comment-card-grid {
+    grid-template-columns: 1fr;
   }
 }
