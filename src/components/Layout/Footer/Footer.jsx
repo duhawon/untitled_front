@@ -1,11 +1,12 @@
 import React from 'react';
+import './Footer.css';
 
 const Footer = () => {
     return (
-        <div>
-            <p>푸터</p>
-        </div>
+        <footer className="footer">
+            © 2025 by DUHA, Inc. All rights reserved.
+        </footer>
     );
-}
+};
 
 export default Footer;

@@ -1,12 +1,16 @@
 .layout-wrapper {
-    width: 100%;
-  }
-  
-  /* 페이지 공통 좌우 여백 + 가운데 정렬 */
-  .layout-content {
-    max-width: 1200px;   /* 중앙 최대 너비 */
-    margin: 0 auto;      /* 가운데 정렬 */
-    padding: 0 32px;     /* 좌우 여백 */
-    box-sizing: border-box;
-  }
-  
+  width: 100%;
+  min-height: 100vh;         /* 화면 전체 높이 */
+  display: flex;
+  flex-direction: column;    /* 위→아래 레이아웃 */
+}
+
+/* 페이지 공통 좌우 여백 + 가운데 정렬 */
+.layout-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px;         /* Header 아래 여백 포함 */
+  box-sizing: border-box;
+
+  flex: 1;                    /* 🔥 Footer를 아래로 밀어줌 */
+}
