@@ -1,0 +1,129 @@
+/* ==== 헤더 ==== */
+.review-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.review-modal-header .room-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* ==== 텍스트 영역 ==== */
+.review-modal-textarea {
+  width: 100%;
+  height: 180px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  resize: none;
+  font-size: 15px;
+  outline: none;
+  overflow-y: auto;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.review-modal-textarea:focus {
+  border-color: #000;
+}
+
+/* ==== 하단 영역 ==== */
+.review-modal-footer {
+  display: flex;
+  justify-content: space-between; /* 왼쪽 스포일러 / 오른쪽 저장 */
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* ==== 스포일러 토글 ==== */
+.spoiler-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.spoiler-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  position: relative;
+  transition: 0.2s;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.spoiler-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+}
+
+.spoiler-switch input:checked + .toggle-slider {
+  background-color: #4caf50;
+}
+
+.toggle-label {
+  font-size: 12px;
+  color: #333;
+}
+
+/* ==== 글자 수 ==== */
+.review-count {
+  font-size: 10px !important;
+  color: #666 !important;
+  margin-right: 4px !important;
+}
+
+/* ==== 오른쪽 영역: 글자수 + 저장 (CommentModal과 동일) ==== */
+.save-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px; /* 글자수 - 저장 버튼 간격 */
+}
+
+/* ==== 저장 버튼 ==== */
+.review-save-btn {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.review-save-btn:hover {
+  background: #333;
+}
+
+.review-save-btn.disabled,
+.review-save-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.review-save-btn.disabled:hover,
+.review-save-btn:disabled:hover {
+  background: #aaa;
+}
