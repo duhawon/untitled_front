@@ -34,8 +34,8 @@ const Header = () => {
 
                 {isLoggedIn ? (
                     <>
-                        <div className="menu-item">기록하기</div>
-                        <div className="menu-item">소식</div>
+                        {/* <div className="menu-item">기록하기</div> */}
+                        {/* <div className="menu-item">소식</div> */}
                         <div className="menu-item user-name">{userInfo.name}</div>
                         <button
                             className="header-btn"

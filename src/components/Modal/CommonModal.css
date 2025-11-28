@@ -1,41 +1,48 @@
+/* overlay: 화면 전체를 덮고 중앙 정렬 */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
+  position: fixed;    /* 화면에 고정 */
+  inset: 0;           /* top:0; right:0; bottom:0; left:0; */
+  background: rgba(0,0,0,0.45);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;      /* 가능한 최상단으로 */
+  padding: 16px;      /* 모바일에서 좌우 여백 확보 */
+  box-sizing: border-box;
 }
 
+/* 실제 모달 박스 */
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;   /* 필요 시 조절 */
   position: relative;
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box; /* padding 포함 계산 */
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  /* 안전장치: 부모 레이아웃 영향 차단 */
+  transform: translateZ(0);
 }
 
+/* 닫기 버튼 */
 .modal-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   border: none;
   background: none;
-  font-size: 20px;
+  font-size: 22px;
   cursor: pointer;
   line-height: 1;
 }
 
+/* 내부 body: children이 들어갈 공간 */
 .modal-body {
+  margin-top: 8px; /* 닫기 버튼 아래로 내려주기 */
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 30px;
+  gap: 12px;
 }
