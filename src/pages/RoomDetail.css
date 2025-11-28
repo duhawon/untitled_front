@@ -183,31 +183,31 @@
 }
 
 /* ========================= */
-/*    코멘트 섹션 스타일     */
+/*    리뷰 섹션 스타일     */
 /* ========================= */
 
-.comment-section {
+.review-section {
   width: 100%;
 }
 
-.comment-header {
+.review-header {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 20px;
 }
 
-.comment-title {
+.review-title {
   font-size: 22px;
   font-weight: bold;
 }
 
-.comment-count {
+.review-count {
   font-size: 18px;
   color: #777;
 }
 
-.comment-more {
+.review-more {
   margin-left: auto;
   border: none;
   background: none;
@@ -217,20 +217,20 @@
 }
 
 /* 카드 리스트 (3개 × 2줄) */
-.comment-card-grid {
+.review-card-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
 @media (max-width: 900px) {
-  .comment-card-grid {
+  .review-card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
-  .comment-card-grid {
+  .review-card-grid {
     grid-template-columns: 1fr;
   }
 }

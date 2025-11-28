@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout/Layout";
 import StarRating from "../components/StarRating/StarRating";
-import CommentCard from "../components/Card/Comment/CommentCard";
+import ReviewCard from "../components/Card/Review/ReviewCard";
 import "./RoomDetail.css";
 
 const RoomDetail = () => {
@@ -9,7 +9,7 @@ const RoomDetail = () => {
   const toggleWish = () => setWish(!wish);
 
   // 더미 데이터
-  const comments = [
+  const reviews = [
     {
       id: 1,
       user: "Alice",
@@ -115,7 +115,7 @@ const RoomDetail = () => {
 
             {/* 버튼 */}
             <div className="action-buttons-row">
-              <button className="action-btn">💬 코멘트</button>
+              <button className="action-btn">💬 평가하기</button>
               <button className="action-btn">📅 탈출일</button>
             </div>
 
@@ -138,17 +138,17 @@ const RoomDetail = () => {
           </div>
         </div>
 
-        {/* 코멘트 섹션 */}
-        <div className="comment-section">
-          <div className="comment-header">
-            <h2 className="comment-title">코멘트</h2>
-            <span className="comment-count">950+</span>
-            <button className="comment-more">더보기</button>
+        {/* 평가 섹션 */}
+        <div className="review-section">
+          <div className="review-header">
+            <h2 className="review-title"></h2>
+            <span className="review-count">950+</span>
+            <button className="review-more">더보기</button>
           </div>
 
-          <div className="comment-card-grid">
-            {comments.map((c) => (
-              <CommentCard
+          <div className="review-card-grid">
+            {reviews.map((c) => (
+              <ReviewCard
                 key={c.id}
                 user={c.user}
                 userImg={c.userImg}

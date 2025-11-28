@@ -1,0 +1,76 @@
+.review-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.user-score {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin: 4px 0;
+}
+
+.review-text {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.review-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: #777;
+}
+
+.review-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.action-btn {
+  font-size: 14px;
+  cursor: pointer;
+  color: #444;
+}
+
+.action-btn:hover {
+  color: #000;
+}
+
+.action-btn.liked {
+  color: red;
+  font-weight: 600;
+}
