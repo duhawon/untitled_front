@@ -11,7 +11,7 @@ const ReviewCard = ({ user, userImg, score, text, likes, replies }) => {
       <div className="review-card">
 
         {/* 상단 사용자 정보 + 점수 */}
-        <div className="review-header">
+        <div className="review-card-header">
           <div className="user-info">
             <img
               src={userImg || "https://picsum.photos/40"}
@@ -26,18 +26,18 @@ const ReviewCard = ({ user, userImg, score, text, likes, replies }) => {
         <hr className="divider" />
 
         {/*  내용 */}
-        <div className="review-text">{text}</div>
+        <div className="review-card-text">{text}</div>
 
         <hr className="divider" />
 
         {/* 좋아요 / 댓글 수 */}
-        <div className="review-stats">
+        <div className="review-card-stats">
           <span>{likes} 좋아요</span>
           <span>{replies} 댓글</span>
         </div>
 
         {/* 액션 버튼 */}
-        <div className="review-actions">
+        <div className="review-card-actions">
           <span
             className={`action-btn ${liked ? "liked" : ""}`}
             onClick={() => setLiked(!liked)}
