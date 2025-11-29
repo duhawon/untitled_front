@@ -1,0 +1,85 @@
+.like-list-modal {
+  padding: 16px;
+}
+
+.like-list-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.like-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 4px;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.like-list-items::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.like-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.like-list-item:last-child {
+  border-bottom: none;
+}
+
+.like-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.like-user-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.like-user-name {
+  font-size: 14px;
+  color: #222;
+}
+
+/* 팔로우 버튼 기본 (팔로우 상태) */
+.follow-btn {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease;
+}
+
+/* 팔로잉 상태 */
+.follow-btn.following {
+  background-color: #f1f1f1;
+  color: #222;
+  border: 1px solid #ccc;
+}
+
+.follow-btn:hover {
+  opacity: 0.9;
+}

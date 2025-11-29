@@ -1,8 +1,9 @@
 .review-card {
-  background: #fff;
+  background-color: #fff;
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -21,8 +22,8 @@
 }
 
 .user-img {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -30,40 +31,55 @@
 .user-name {
   font-weight: 600;
   font-size: 15px;
+  color: #222;
 }
 
 .user-score {
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
+  color: #ff9900;
 }
 
 .divider {
   border: none;
-  border-top: 1px solid #e5e5e5;
+  height: 1px;
+  background-color: #eee;
   margin: 4px 0;
 }
 
 .review-card-text {
-  font-size: 15px;
+  font-size: 14px;
+  color: #333;
   line-height: 1.4;
 }
 
 .review-card-stats {
   display: flex;
+  justify-content: flex-start;
   gap: 16px;
-  font-size: 14px;
-  color: #777;
+  font-size: 13px;
+  color: #555;
+}
+
+.review-card-stats .likes-count {
+  cursor: pointer; /* 마우스 올리면 클릭 느낌 */
+}
+
+.review-card-stats .likes-count:hover {
+  text-decoration: underline;
 }
 
 .review-card-actions {
   display: flex;
-  gap: 16px;
+  justify-content: flex-start;
+  gap: 12px;
+  font-size: 14px;
 }
 
 .action-btn {
-  font-size: 14px;
   cursor: pointer;
-  color: #444;
+  color: #555;
+  user-select: none;
+  transition: color 0.2s;
 }
 
 .action-btn:hover {
@@ -71,6 +87,5 @@
 }
 
 .action-btn.liked {
-  color: red;
-  font-weight: 600;
+  color: #ff4444;
 }
