@@ -2,15 +2,21 @@ import React, { useState } from "react";
 import Layout from "../components/Layout/Layout";
 import StarRating from "../components/StarRating/StarRating";
 import ReviewCard from "../components/Card/Review/ReviewCard";
-import ReviewModal from "../components/Modal/ReviewModal"; // 추가
+import ReviewModal from "../components/Modal/ReviewModal";
+import DatePickerModal from "../components/Modal/DatePickerModal"; // 추가
 import "./RoomDetail.css";
 
 const RoomDetail = () => {
   const [wish, setWish] = useState(false);
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); // 모달 상태
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+  // 탈출일 모달 상태 + 선택 날짜 저장
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
   const toggleWish = () => setWish(!wish);
 
-  // 더미 리뷰 데이터
+  // 리뷰 더미 데이터
   const reviews = [
     { id: 1, user: "Alice", userImg: "https://picsum.photos/40?random=1", score: 4.5, text: "스토리가 정말 재미있고 몰입감 최고였어요!", date: "2025-11-20", likes: 120, replies: 5 },
     { id: 2, user: "Bob", userImg: "https://picsum.photos/40?random=2", score: 3.0, text: "난이도가 조금 높아서 친구랑 힘들었어요.", date: "2025-11-18", likes: 45, replies: 2 },
@@ -20,16 +26,15 @@ const RoomDetail = () => {
     { id: 6, user: "Frank", userImg: "https://picsum.photos/40?random=6", score: 4.2, text: "친구들과 함께 즐기기 딱 좋은 방이었어요.", date: "2025-11-08", likes: 90, replies: 4 },
   ];
 
-  // 리뷰 저장 함수
+  // 리뷰 저장
   const handleSaveReview = (data) => {
     console.log("저장된 리뷰:", data);
-    // 실제 API 호출 가능
   };
 
   return (
     <Layout>
       <div className="room-detail-container">
-        {/* 상단 포스터 + 정보 영역 */}
+        {/* 상단 포스터 + 정보 */}
         <div className="room-top-row">
           <div className="poster-wrap">
             <img src="https://picsum.photos/300/200?random=10" alt="방탈출 포스터" className="poster-img" />
@@ -59,7 +64,10 @@ const RoomDetail = () => {
               <button className="action-btn" onClick={() => setIsReviewModalOpen(true)}>
                 💬 평가하기
               </button>
-              <button className="action-btn">📅 탈출일</button>
+
+              <button className="action-btn" onClick={() => setIsDateModalOpen(true)}>
+                {selectedDate ? `📅 탈출일: ${selectedDate}` : "📅 탈출일"}
+              </button>
             </div>
 
             <hr className="detail-hr" />
@@ -78,7 +86,7 @@ const RoomDetail = () => {
           </div>
         </div>
 
-        {/* 리뷰 섹션 */}
+        {/* 리뷰 영역 */}
         <div className="review-section">
           <div className="review-header">
             <h2 className="review-title">평가</h2>
@@ -102,12 +110,23 @@ const RoomDetail = () => {
           </div>
         </div>
 
-        {/* 리뷰 모달 */}
+        {/* 평가 모달 */}
         <ReviewModal
           isOpen={isReviewModalOpen}
           onClose={() => setIsReviewModalOpen(false)}
           roomTitle="방탈출 예시 제목"
           onSave={handleSaveReview}
+        />
+
+        {/* 탈출일 선택 모달 */}
+        <DatePickerModal
+          isOpen={isDateModalOpen}
+          onClose={() => setIsDateModalOpen(false)}
+          initialDate={selectedDate}
+          onSave={(date) => {
+            setSelectedDate(date);
+            setIsDateModalOpen(false);
+          }}
         />
       </div>
     </Layout>

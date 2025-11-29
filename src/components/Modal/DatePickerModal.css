@@ -1,0 +1,43 @@
+.datepicker-wrap {
+  padding: 16px 14px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.datepicker-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.datepicker-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+/* 버튼 우측 정렬 */
+.datepicker-btn-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.datepicker-save-btn {
+  padding: 10px 18px;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.datepicker-save-btn:hover {
+  background: #000;
+}
