@@ -22,10 +22,12 @@ const dummyLikeUsers = [
   { id: 15, userName: "Paul", userImg: "https://picsum.photos/40?random=16" }
 ];
 
-const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = dummyLikeUsers }) => {
+const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = dummyLikeUsers, isSummary }) => {
   const [liked, setLiked] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isLikeListOpen, setIsLikeListOpen] = useState(false);
+  const displayText = isSummary && text.length > 100 ? text.slice(0, 100) + "..." : text;
+
 
   return (
     <>
@@ -47,7 +49,7 @@ const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = du
         <hr className="divider" />
 
         {/* 내용 */}
-        <div className="review-card-text">{text}</div>
+        <div className="review-card-text">{displayText}</div>
 
         <hr className="divider" />
 
