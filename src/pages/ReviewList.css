@@ -1,0 +1,49 @@
+.review-list-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* 상단 제목 */
+.review-list-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* 정렬 드롭다운 */
+.review-list-sort-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.review-sort-dropdown {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+/* 리뷰 카드 세로 정렬 + 스크롤 */
+.review-list-scroll {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.review-list-item {
+    margin-bottom: 20px;
+}
+
+/* 스크롤바 스타일(Optional) */
+.review-list-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.review-list-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
