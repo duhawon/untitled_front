@@ -4,6 +4,7 @@ import { login, logout } from '../../../store/actions/userActions';
 import Login from '../../../pages/Login';
 import Signup from '../../../pages/Signup';
 import './Header.css';
+import { useNavigate } from 'react-router-dom';
 
 const dummyUser = {
     id: 1,
@@ -13,6 +14,7 @@ const dummyUser = {
 
 const Header = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { isLoggedIn, userInfo } = useSelector((state) => state.user);
 
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -25,7 +27,7 @@ const Header = () => {
         <header className="header">
             {/* 왼쪽 로고 영역 */}
             <div className="header-left">
-                <img src="/logo.png" alt="탈출록 로고" className="logo" />
+                <img src="/logo.png" alt="탈출록 로고" className="logo" onClick={() => navigate("/")}/>
             </div>
 
             {/* 오른쪽 메뉴 */}

@@ -3,6 +3,7 @@ import Layout from "../components/Layout/Layout";
 import StarRating from "../components/StarRating/StarRating";
 import ReviewCard from "../components/Card/Review/ReviewCard";
 import ReviewModal from "../components/Modal/ReviewModal";
+import { useNavigate, useParams } from "react-router-dom";
 import DatePickerModal from "../components/Modal/DatePickerModal"; // 추가
 import "./RoomDetail.css";
 
@@ -10,22 +11,25 @@ const RoomDetail = () => {
   const [wish, setWish] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
+  const navigate = useNavigate();
+  const { roomId } = useParams(); 
+
   // 탈출일 모달 상태 + 선택 날짜 저장
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
   const toggleWish = () => setWish(!wish);
 
-  // 리뷰 더미 데이터
-  const reviews = [
-    { id: 1, user: "Alice", userImg: "https://picsum.photos/40?random=1", score: 4.5, text: "스토리가 정말 재미있고 몰입감 최고였어요!", date: "2025-11-20", likes: 120, replies: 5 },
-    { id: 2, user: "Bob", userImg: "https://picsum.photos/40?random=2", score: 3.0, text: "난이도가 조금 높아서 친구랑 힘들었어요.", date: "2025-11-18", likes: 45, replies: 2 },
-    { id: 3, user: "Charlie", userImg: "https://picsum.photos/40?random=3", score: 5.0, text: "완전히 새로운 경험! 다시 하고 싶어요!", date: "2025-11-15", likes: 200, replies: 10 },
-    { id: 4, user: "Diana", userImg: "https://picsum.photos/40?random=4", score: 4.0, text: "공포 테마라서 더 몰입되었어요. 분위기 최고!", date: "2025-11-12", likes: 75, replies: 3 },
-    { id: 5, user: "Eve", userImg: "https://picsum.photos/40?random=5", score: 3.5, text: "시간이 조금 짧은 느낌이었지만 재미있었습니다.", date: "2025-11-10", likes: 60, replies: 1 },
-    { id: 6, user: "Frank", userImg: "https://picsum.photos/40?random=6", score: 4.2, text: "친구들과 함께 즐기기 딱 좋은 방이었어요.", date: "2025-11-08", likes: 90, replies: 4 },
-  ];
-
+    // 리뷰 더미 데이터
+    const reviews = [
+      { id: 1, user: "Alice", userImg: "https://picsum.photos/40?random=1", score: 4.5, text: "스토리가 정말 재미있고 몰입감 최고였어요!", date: "2025-11-20", likes: 120, replies: 5 },
+      { id: 2, user: "Bob", userImg: "https://picsum.photos/40?random=2", score: 3.0, text: "난이도가 조금 높아서 친구랑 힘들었어요.", date: "2025-11-18", likes: 45, replies: 2 },
+      { id: 3, user: "Charlie", userImg: "https://picsum.photos/40?random=3", score: 5.0, text: "완전히 새로운 경험! 다시 하고 싶어요!", date: "2025-11-15", likes: 200, replies: 10 },
+      { id: 4, user: "Diana", userImg: "https://picsum.photos/40?random=4", score: 4.0, text: "공포 테마라서 더 몰입되었어요. 분위기 최고!", date: "2025-11-12", likes: 75, replies: 3 },
+      { id: 5, user: "Eve", userImg: "https://picsum.photos/40?random=5", score: 3.5, text: "시간이 조금 짧은 느낌이었지만 재미있었습니다.", date: "2025-11-10", likes: 60, replies: 1 },
+      { id: 6, user: "Frank", userImg: "https://picsum.photos/40?random=6", score: 4.2, text: "친구들과 함께 즐기기 딱 좋은 방이었어요.", date: "2025-11-08", likes: 90, replies: 4 },
+    ];
+  
   // 리뷰 저장
   const handleSaveReview = (data) => {
     console.log("저장된 리뷰:", data);
@@ -91,7 +95,8 @@ const RoomDetail = () => {
           <div className="review-header">
             <h2 className="review-title">평가</h2>
             <span className="review-count">950+</span>
-            <button className="review-more">더보기</button>
+            <button className="review-more" 
+                    onClick={() => navigate(`/room/${roomId}/reviews`)}>더보기</button>
           </div>
 
           <div className="review-card-grid">

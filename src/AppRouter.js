@@ -1,19 +1,9 @@
-import { Typography } from '@mui/material';
 import React from "react";
 import Main from './pages/Main';
 import MyPage from './pages/MyPage';
 import RoomDetail from './pages/RoomDetail';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-
-function Copyright() {
-    return(
-        <Typography variant="body2" color="textSecondary" align="center">
-            {"Copyright © "}
-            duha, {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-}
+import ReviewList from './pages/ReviewList';
 
 function AppRouter() {
     return (
@@ -22,7 +12,8 @@ function AppRouter() {
                 <Routes>
                     <Route path="/" element={<Main />} />
                     <Route path="mypage" element={<MyPage />} />
-                    <Route path="roomdetail" element={<RoomDetail />} />
+                    <Route path="room/:roomId" element={<RoomDetail />} />
+                    <Route path="room/:roomId/reviews" element={<ReviewList />} />
                 </Routes>
             </BrowserRouter>
         </div>

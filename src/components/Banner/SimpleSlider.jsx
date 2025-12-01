@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import BannerCard from "./BannerCard";
 import { banners as dummyBanners } from "./dummyData";
+import { useNavigate } from "react-router-dom";
 
 const SimpleSlider = () => {
   const [startIdx, setStartIdx] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(5);
+  const navigate = useNavigate();
 
   // 화면 크기에 따라 보여줄 카드 개수 자동 조정
   useEffect(() => {
@@ -71,7 +73,7 @@ const SimpleSlider = () => {
                 img={banner.img}
                 title={banner.title}
                 rating={banner.rating}
-                onClick={() => alert(`Clicked ${banner.title}`)}
+                onClick={() => navigate(`/room/${banner.roomId}`)}
               />
             </div>
           ))}
