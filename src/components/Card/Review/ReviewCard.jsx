@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./ReviewCard.css";
-import CommentModal from '../../Modal/CommentModal';
-import LikeListModal from '../../Modal/LikeListModal';
+import CommentModal from "../../Modal/CommentModal";
+import LikeListModal from "../../Modal/LikeListModal";
+import { useNavigate } from "react-router-dom";
 
 // dummy 데이터 예시
 const dummyLikeUsers = [
@@ -22,11 +23,28 @@ const dummyLikeUsers = [
   { id: 15, userName: "Paul", userImg: "https://picsum.photos/40?random=16" }
 ];
 
-const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = dummyLikeUsers, isSummary }) => {
+const ReviewCard = ({
+  reviewId,
+  user,
+  userImg,
+  score,
+  text,
+  likes,
+  replies,
+  likeUsers = dummyLikeUsers,
+  isSummary
+}) => {
   const [liked, setLiked] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isLikeListOpen, setIsLikeListOpen] = useState(false);
-  const displayText = isSummary && text.length > 100 ? text.slice(0, 100) + "..." : text;
+
+  const navigate = useNavigate();
+  const displayText =
+    isSummary && text.length > 100 ? text.slice(0, 100) + "..." : text;
+  const goToDetail = () => {
+    console.log("Review ID:", reviewId);
+    navigate(`/review/${reviewId}`);
+  };
 
   return (
     <>
@@ -49,28 +67,44 @@ const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = du
 
         {/* Main */}
         <div className="review-card-main">
-          <div className="review-card-text">{displayText}</div>
+          <div
+            className="review-card-text"
+            onClick={goToDetail}
+            style={{ cursor: "pointer" }}>
+            {displayText}
+          </div>
         </div>
 
         {/* Footer */}
         <div className="review-card-footer">
           <hr className="divider-bottom" />
           <div className="review-card-stats">
+            {/* 좋아요 리스트 모달 */}
             <span
               className="likes-count"
               onClick={() => setIsLikeListOpen(true)}
             >
               {likes} 좋아요
             </span>
-            <span>{replies} 댓글</span>
+            {/* 댓글 개수 → ReviewDetail 이동 */}
+            <span
+              className="replies-count"
+              onClick={goToDetail}
+              style={{ cursor: "pointer" }}
+            >
+              {replies} 댓글
+            </span>
           </div>
           <div className="review-card-actions">
+            {/* 좋아요 버튼 */}
             <span
               className={`action-btn ${liked ? "liked" : ""}`}
               onClick={() => setLiked(!liked)}
             >
               ❤️ 좋아요
             </span>
+
+            {/* 댓글 쓰기 버튼 → 모달 열림 (페이지 이동 X) */}
             <span
               className="action-btn"
               onClick={() => setIsCommentModalOpen(true)}
@@ -91,7 +125,7 @@ const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = du
         }}
       />
 
-      {/* 좋아요 사용자 리스트 모달 */}
+      {/* 좋아요 목록 모달 */}
       <LikeListModal
         isOpen={isLikeListOpen}
         onClose={() => setIsLikeListOpen(false)}

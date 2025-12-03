@@ -91,16 +91,17 @@ const RoomDetail = () => {
           </div>
 
           <div className="review-card-grid">
-            {reviews.slice(0,6).map((c) => (
+            {reviews.slice(0,6).map((r) => (
               <ReviewCard
-                key={c.id}
-                user={c.user}
-                userImg={c.userImg}
-                score={c.score}
-                text={c.text}
-                date={c.date}
-                likes={c.likes}
-                replies={c.replies}
+                key={r.id}
+                reviewId={r.id}
+                user={r.user}
+                userImg={r.userImg}
+                score={r.score}
+                text={r.text}
+                date={r.date}
+                likes={r.likes}
+                replies={r.replies}
                 isSummary={true}
               />
             ))}

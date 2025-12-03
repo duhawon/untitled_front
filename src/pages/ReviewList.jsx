@@ -51,6 +51,7 @@ const ReviewList = () => {
           {sortedReviews.map((r) => (
             <div key={r.id} className="review-list-item">
               <ReviewCard
+                reviewId={r.id}
                 user={r.user}
                 userImg={r.userImg}
                 score={r.score}

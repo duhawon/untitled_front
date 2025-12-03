@@ -1,0 +1,76 @@
+.comment-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.comment-user-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.comment-header {
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+  align-items: center;
+}
+
+.comment-user-name {
+  font-weight: bold;
+  color: #222;
+}
+
+.comment-date {
+  color: #888;
+  font-size: 12px;
+}
+
+.comment-text {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.like-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  transition: transform 0.1s, color 0.2s;
+}
+
+.like-btn:hover {
+  transform: scale(1.1);
+}
+
+/* 클릭 시 붉은색 */
+.like-btn.liked {
+  color: #ff3b30;
+}
+
+.like-count {
+  color: #555;
+}
