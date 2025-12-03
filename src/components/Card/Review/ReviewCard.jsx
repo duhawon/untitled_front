@@ -32,7 +32,8 @@ const ReviewCard = ({
   likes,
   replies,
   likeUsers = dummyLikeUsers,
-  isSummary
+  isSummary,
+  disableNavigation = false,
 }) => {
   const [liked, setLiked] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
@@ -42,8 +43,9 @@ const ReviewCard = ({
   const displayText =
     isSummary && text.length > 100 ? text.slice(0, 100) + "..." : text;
   const goToDetail = () => {
-    console.log("Review ID:", reviewId);
-    navigate(`/review/${reviewId}`);
+    if (!disableNavigation) {
+      navigate(`/review/${reviewId}`);
+    }
   };
 
   return (
@@ -70,7 +72,8 @@ const ReviewCard = ({
           <div
             className="review-card-text"
             onClick={goToDetail}
-            style={{ cursor: "pointer" }}>
+            style={{ cursor: disableNavigation ? "default" : "pointer" }}
+          >
             {displayText}
           </div>
         </div>
@@ -90,7 +93,7 @@ const ReviewCard = ({
             <span
               className="replies-count"
               onClick={goToDetail}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: disableNavigation ? "default" : "pointer" }}
             >
               {replies} 댓글
             </span>

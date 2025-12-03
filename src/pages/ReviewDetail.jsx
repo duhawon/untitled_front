@@ -10,9 +10,7 @@ import "./ReviewDetail.css";
 const ReviewDetail = () => {
   const { reviewId } = useParams();
   
-  // 클릭한 리뷰 찾기
   const review = reviews.find(r => r.id === parseInt(reviewId));
-
 
   if (!review) return <Layout>리뷰를 찾을 수 없습니다.</Layout>;
 
@@ -30,6 +28,7 @@ const ReviewDetail = () => {
             likes={review.likes}
             replies={review.replies}
             isSummary={false} // 상세 모드
+            disableNavigation={true} // 클릭 막기
           />
         </div>
 
