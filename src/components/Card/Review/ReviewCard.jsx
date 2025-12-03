@@ -28,12 +28,11 @@ const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = du
   const [isLikeListOpen, setIsLikeListOpen] = useState(false);
   const displayText = isSummary && text.length > 100 ? text.slice(0, 100) + "..." : text;
 
-
   return (
     <>
       <div className="review-card">
 
-        {/* 상단 사용자 정보 + 점수 */}
+        {/* Header */}
         <div className="review-card-header">
           <div className="user-info">
             <img
@@ -46,39 +45,39 @@ const ReviewCard = ({ user, userImg, score, text, likes, replies, likeUsers = du
           <div className="user-score">⭐️{score}</div>
         </div>
 
-        <hr className="divider" />
+        <hr className="divider-top" />
 
-        {/* 내용 */}
-        <div className="review-card-text">{displayText}</div>
-
-        <hr className="divider" />
-
-        {/* 좋아요 / 댓글 수 */}
-        <div className="review-card-stats">
-          <span
-            className="likes-count"
-            onClick={() => setIsLikeListOpen(true)}
-          >
-            {likes} 좋아요
-          </span>
-          <span>{replies} 댓글</span>
+        {/* Main */}
+        <div className="review-card-main">
+          <div className="review-card-text">{displayText}</div>
         </div>
 
-        {/* 액션 버튼 */}
-        <div className="review-card-actions">
-          <span
-            className={`action-btn ${liked ? "liked" : ""}`}
-            onClick={() => setLiked(!liked)}
-          >
-            ❤️ 좋아요
-          </span>
-
-          <span
-            className="action-btn"
-            onClick={() => setIsCommentModalOpen(true)}
-          >
-            💬 댓글
-          </span>
+        {/* Footer */}
+        <div className="review-card-footer">
+          <hr className="divider-bottom" />
+          <div className="review-card-stats">
+            <span
+              className="likes-count"
+              onClick={() => setIsLikeListOpen(true)}
+            >
+              {likes} 좋아요
+            </span>
+            <span>{replies} 댓글</span>
+          </div>
+          <div className="review-card-actions">
+            <span
+              className={`action-btn ${liked ? "liked" : ""}`}
+              onClick={() => setLiked(!liked)}
+            >
+              ❤️ 좋아요
+            </span>
+            <span
+              className="action-btn"
+              onClick={() => setIsCommentModalOpen(true)}
+            >
+              💬 댓글
+            </span>
+          </div>
         </div>
       </div>
 

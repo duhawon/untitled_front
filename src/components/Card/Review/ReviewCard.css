@@ -1,12 +1,12 @@
 .review-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Header/Main/Footer 구분 */
   background-color: #fff;
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   margin-bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .review-card-header {
@@ -39,11 +39,16 @@
   color: #ff9900;
 }
 
-.divider {
+.divider-top,
+.divider-bottom {
   border: none;
   height: 1px;
   background-color: #eee;
-  margin: 4px 0;
+  margin: 8px 0;
+}
+
+.review-card-main {
+  flex-grow: 1; /* Main 영역이 늘어나면서 Footer 하단 유지 */
 }
 
 .review-card-text {
@@ -52,16 +57,22 @@
   line-height: 1.4;
 }
 
+.review-card-footer {
+  display: flex;
+  flex-direction: column;
+}
+
 .review-card-stats {
   display: flex;
   justify-content: flex-start;
   gap: 16px;
   font-size: 13px;
   color: #555;
+  margin-bottom: 8px;
 }
 
 .review-card-stats .likes-count {
-  cursor: pointer; /* 마우스 올리면 클릭 느낌 */
+  cursor: pointer;
 }
 
 .review-card-stats .likes-count:hover {
