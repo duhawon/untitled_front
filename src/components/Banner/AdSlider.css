@@ -1,0 +1,19 @@
+/* 광고 카드 */
+.ad-slider-card {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 이미지 */
+.ad-slider-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+  

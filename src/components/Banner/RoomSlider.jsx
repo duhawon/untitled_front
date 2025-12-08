@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import BannerCard from "./BannerCard";
 import { banners as dummyBanners } from "./dummyData";
 import { useNavigate } from "react-router-dom";
+import "./RoomSlider.css";
+import "./SliderBase.css";
 
-const SimpleSlider = () => {
+const RoomSlider = () => {
   const [startIdx, setStartIdx] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(5);
   const navigate = useNavigate();
 
-  // 화면 크기에 따라 보여줄 카드 개수 자동 조정
+  // 화면 크기에 따라 보여줄 카드 개수 조정
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setSlidesToShow(3);
@@ -16,9 +18,8 @@ const SimpleSlider = () => {
       else setSlidesToShow(5);
     };
 
-    handleResize(); // 초기 실행
+    handleResize();
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -33,46 +34,31 @@ const SimpleSlider = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        width: "100%",
-        justifyContent: "center", // 버튼+슬라이더 전체 가운데 정렬
-      }}
-    >
+    <div className="slider-container">
       {/* 이전 버튼 */}
       <button
+        className="slider-arrow left"
         onClick={prev}
         disabled={startIdx === 0}
-        style={{ marginRight: "10px" }}
       >
         ◀
       </button>
 
-      {/* 슬라이더 영역 */}
-      <div
-        style={{
-          display: "flex",
-          overflow: "hidden",
-          flexGrow: 1,
-          maxWidth: "1200px", // 슬라이더 최대 너비
-          width: "100%",
-        }}
-      >
+      {/* 슬라이더 내용 */}
+      <div className="slider-wrapper">
         {dummyBanners
           .slice(startIdx, startIdx + slidesToShow)
           .map((banner, idx) => (
             <div
+              className="slider-item"
               key={idx}
-              style={{
-                flex: `0 0 calc(100% / ${slidesToShow})`,
-              }}
+              style={{ flex: `0 0 calc(100% / ${slidesToShow})` }}
             >
               <BannerCard
                 img={banner.img}
                 title={banner.title}
                 rating={banner.rating}
+                rank={startIdx + idx + 1} // ⭐ 순위 표시
                 onClick={() => navigate(`/room/${banner.roomId}`)}
               />
             </div>
@@ -81,9 +67,9 @@ const SimpleSlider = () => {
 
       {/* 다음 버튼 */}
       <button
+        className="slider-arrow right"
         onClick={next}
         disabled={startIdx + slidesToShow >= dummyBanners.length}
-        style={{ marginLeft: "10px" }}
       >
         ▶
       </button>
@@ -91,4 +77,4 @@ const SimpleSlider = () => {
   );
 };
 
-export default SimpleSlider;
+export default RoomSlider;
