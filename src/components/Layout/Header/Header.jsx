@@ -32,7 +32,15 @@ const Header = () => {
 
             {/* 오른쪽 메뉴 */}
             <div className="header-right">
-                <input className="search-input" placeholder="방탈출 검색..." />
+                <input
+                    className="search-input"
+                    placeholder="방탈출 검색..."
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && e.target.value.trim() !== "") {
+                            navigate(`/search/${encodeURIComponent(e.target.value.trim())}`);
+                        }
+                    }}
+                />
 
                 {isLoggedIn ? (
                     <>

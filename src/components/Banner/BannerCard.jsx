@@ -30,17 +30,25 @@ const BannerCard = ({ img, title, rating, rank, onClick }) => {
         </div>
       )}
 
-      <img
-        src={img}
-        alt={title}
+      <div
         style={{
           width: "100%",
-          height: "260px",       // 포스터 느낌 높이
-          objectFit: "cover",    // 영역 가득 채우면서 비율 유지
-          display: "block",      // 이미지 밑 여백 제거
-          borderRadius: "8px",   // 테두리 약간 둥글게
+          aspectRatio: "2 / 3", // 포스터 비율 2:3
+          borderRadius: "8px",
+          overflow: "hidden",
         }}
-      />
+      >
+        <img
+          src={img}
+          alt={title}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover", // 영역 가득 채우면서 비율 유지
+            display: "block",
+          }}
+        />
+      </div>
       <h3 style={{ margin: "5px 0 0 0", fontSize: "16px" }}>{title}</h3>
       <p style={{ margin: "2px 0 0 0", fontSize: "14px" }}>평점 {rating}</p>
     </div>

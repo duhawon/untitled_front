@@ -1,0 +1,21 @@
+/* 검색 결과 헤더 */
+.search-header {
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #f0f0f0; /* 사각형 배경 */
+  padding: 4px 16px; /* 텍스트 높이에 맞춤 */
+  margin-bottom: 16px;
+}
+
+/* 검색 결과 그리드 */
+.search-grid {
+  display: grid;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px); /* 레이아웃에 맞춰 세로 스크롤 가능 */
+  padding: 0 16px 16px 16px;
+}
+
+.grid-item {
+  width: 100%;
+}
