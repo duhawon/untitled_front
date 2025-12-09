@@ -5,12 +5,7 @@ import Login from '../../../pages/Login';
 import Signup from '../../../pages/Signup';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
-
-const dummyUser = {
-    id: 1,
-    name: 'Duha',
-    email: 'duha@test.com',
-};
+import { dummyUser } from "../../../data/user";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -41,19 +36,21 @@ const Header = () => {
                         }
                     }}
                 />
-
                 {isLoggedIn ? (
-                    <>
-                        {/* <div className="menu-item">기록하기</div> */}
-                        {/* <div className="menu-item">소식</div> */}
-                        <div className="menu-item user-name">{userInfo.name}</div>
-                        <button
+                    <div className="header-user-info">
+                        <img
+                            src={userInfo.profileImg || '/default-profile.png'}
+                            alt="프로필"
+                            className="profile-img"
+                            onClick={() => navigate(`/profile/${userInfo.id}`)}
+                        />
+                        {/* <button
                             className="header-btn"
                             onClick={() => dispatch(logout())}
                         >
                             로그아웃
-                        </button>
-                    </>
+                        </button> */}
+                    </div>
                 ) : (
                     <>
                         <button className="header-btn" onClick={openLogin}>
