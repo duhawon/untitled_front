@@ -3,7 +3,7 @@ import Layout from '../components/Layout/Layout';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Profile.css';
-import { dummyUser } from "../data/user";
+import { useSelector } from 'react-redux'
 
 // 날짜별 포스터 데이터 예시
 const escapeRoomData = {
@@ -14,6 +14,7 @@ const escapeRoomData = {
 
 const Profile = () => {
     const [date, setDate] = useState(new Date());
+    const userInfo = useSelector((state) => state.auth.userInfo);
 
     // 날짜 타일 내부 요소(포스터 이미지)
     const tileContent = ({ date, view }) => {
@@ -39,15 +40,15 @@ const Profile = () => {
 
                 <div className="profile-info">
                     <img
-                        src={dummyUser.profileImg}
+                        src={userInfo?.profileUrl || '/default-profile.png'}
                         alt="프로필"
                         className="profile-big-img"
                     />
                     <div className="profile-info-text">
-                        <h2 className="profile-name">{dummyUser.name}</h2>
-                        <p className="profile-email">{dummyUser.email}</p>
+                        <h2 className="profile-name">{userInfo.name}</h2>
+                        <p className="profile-email">{userInfo.email}</p>
                         <p className="profile-follow">
-                            팔로워 {dummyUser.followers} | 팔로잉 {dummyUser.following}
+                            팔로워 {userInfo.followers} | 팔로잉 {userInfo.following}
                         </p>
                     </div>
                 </div>
@@ -56,12 +57,12 @@ const Profile = () => {
 
                 <div className="profile-stats">
                     <div className="stat-item">
-                        <p className="stat-number">{dummyUser.reviews}</p>
+                        <p className="stat-number">{userInfo.reviews}</p>
                         <p className="stat-text">평가</p>
                     </div>
                     <div className="stat-divider"></div>
                     <div className="stat-item">
-                        <p className="stat-number">{dummyUser.comments}</p>
+                        <p className="stat-number">{userInfo.comments}</p>
                         <p className="stat-text">코멘트</p>
                     </div>
                 </div>

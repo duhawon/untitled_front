@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { signInApi } from '../api/authApi';
 import CommonModal from '../components/Modal/CommonModal';
+import { loginSuccess } from '../store/actions/authActions';
 import ResetPassword from './ResetPassword';
+import { useDispatch, useSelector } from 'react-redux';
 
-const Login = ({ isOpen, onClose, onLogin, openSignup }) => {
+const Login = ({ isOpen, onClose, openSignup }) => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isResetOpen, setIsResetOpen] = useState(false);
 
-  const handleLogin = () => {
-    onLogin(email, password);
-    setEmail('');
-    setPassword('');
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setEmail('');
+      setPassword('');
+    }
+  }, [isLoggedIn]);
+  const handleLogin = async () => {
+    try {
+      const response = await signInApi(email, password);
+      const accessToken = response.headers.authorization?.replace('Bearer ', '');
+
+      dispatch(loginSuccess(
+        accessToken,
+        response.data
+      ))
+      onClose();
+    } catch (error) {
+      alert(error.message);
+      // alert('이메일 또는 비밀번호가 올바르지 않습니다.');
+    }
   };
 
   return (

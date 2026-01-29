@@ -1,17 +1,28 @@
 // pages/Signup.jsx
 import React, { useState } from 'react';
+import { signUpApi } from '../api/userApi';
 import CommonModal from '../components/Modal/CommonModal';
 
-const Signup = ({ isOpen, onClose, onSignup, openLogin }) => {
+const Signup = ({ isOpen, onClose, openLogin }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignup = () => {
-    onSignup(name, email, password);
-    setName('');
-    setEmail('');
-    setPassword('');
+  const handleSignup = async () => {
+    try { 
+      const response = await signUpApi({
+        name,
+        email,
+        password
+      });
+      setName('');
+      setEmail('');
+      setPassword('');
+      onClose();
+      alert("회원가입에 성공하였습니다.");
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (

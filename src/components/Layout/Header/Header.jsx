@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, logout } from '../../../store/actions/userActions';
 import Login from '../../../pages/Login';
 import Signup from '../../../pages/Signup';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
-import { dummyUser } from "../../../data/user";
+import { logout } from '../../../store/actions/authActions';
 
 const Header = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isLoggedIn, userInfo } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+    const { isLoggedIn, userInfo } = useSelector((state) => state.auth);
 
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isSignupOpen, setIsSignupOpen] = useState(false);
@@ -39,17 +38,17 @@ const Header = () => {
                 {isLoggedIn ? (
                     <div className="header-user-info">
                         <img
-                            src={userInfo.profileImg || '/default-profile.png'}
+                            src={userInfo?.profileUrl || '/default-profile.png'}
                             alt="프로필"
                             className="profile-img"
-                            onClick={() => navigate(`/profile/${userInfo.id}`)}
+                            onClick={() => navigate(`/profile/${userInfo.userId}`)}
                         />
-                        {/* <button
+                        { <button
                             className="header-btn"
                             onClick={() => dispatch(logout())}
                         >
                             로그아웃
-                        </button> */}
+                        </button>}
                     </div>
                 ) : (
                     <>
@@ -68,10 +67,6 @@ const Header = () => {
                 isOpen={isLoginOpen}
                 onClose={() => setIsLoginOpen(false)}
                 openSignup={openSignup}
-                onLogin={(email, password) => {
-                    dispatch(login(dummyUser));
-                    setIsLoginOpen(false);
-                }}
             />
 
             {/* 회원가입 모달 */}
@@ -79,10 +74,6 @@ const Header = () => {
                 isOpen={isSignupOpen}
                 onClose={() => setIsSignupOpen(false)}
                 openLogin={openLogin}
-                onSignup={(name, email, password) => {
-                    alert(`회원가입: ${name}, ${email}`);
-                    setIsSignupOpen(false);
-                }}
             />
         </header>
     );
