@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import BannerCard from "./BannerCard";
-import { banners as dummyBanners } from "./dummyData";
 import { useNavigate } from "react-router-dom";
 import "./RoomSlider.css";
 import "./SliderBase.css";
+import { getRoomsApi } from '../../api/roomApi';
 
 const RoomSlider = () => {
   const [startIdx, setStartIdx] = useState(0);
   const [slidesToShow, setSlidesToShow] = useState(5);
   const navigate = useNavigate();
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // 화면 크기에 따라 보여줄 카드 개수 조정
   useEffect(() => {
@@ -23,13 +25,27 @@ const RoomSlider = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    const fetchTop20 = async () => {
+      try {
+        setLoading(true);
+        const res = await getRoomsApi({page:0, size:20});
+        setRooms(res.data.content ?? []);
+      } catch (e) {
+        console.error(e);
+        setRooms([]);
+      }
+    };
+    fetchTop20();
+  },[]);
+
   const prev = () => {
     setStartIdx((prev) => Math.max(prev - slidesToShow, 0));
   };
 
   const next = () => {
     setStartIdx((prev) =>
-      Math.min(prev + slidesToShow, dummyBanners.length - slidesToShow)
+      Math.min(prev + slidesToShow, Math.max(rooms.length - slidesToShow,0))
     );
   };
 
@@ -46,20 +62,20 @@ const RoomSlider = () => {
 
       {/* 슬라이더 내용 */}
       <div className="slider-wrapper">
-        {dummyBanners
+        {rooms
           .slice(startIdx, startIdx + slidesToShow)
-          .map((banner, idx) => (
+          .map((room, idx) => (
             <div
               className="slider-item"
-              key={idx}
+              key={room.id}
               style={{ flex: `0 0 calc(100% / ${slidesToShow})` }}
             >
               <BannerCard
-                img={banner.img}
-                title={banner.title}
-                rating={banner.rating}
+                img={room.img}
+                title={room.name}
+                rating={room.rating}
                 rank={startIdx + idx + 1} // ⭐ 순위 표시
-                onClick={() => navigate(`/room/${banner.roomId}`)}
+                onClick={() => navigate(`/room/${room.id}`)}
               />
             </div>
           ))}
@@ -69,7 +85,7 @@ const RoomSlider = () => {
       <button
         className="slider-arrow right"
         onClick={next}
-        disabled={startIdx + slidesToShow >= dummyBanners.length}
+        disabled={startIdx + slidesToShow >= rooms.length}
       >
         ▶
       </button>
