@@ -6,7 +6,9 @@ import ReviewModal from "../components/Modal/ReviewModal";
 import { useNavigate, useParams } from "react-router-dom";
 import DatePickerModal from "../components/Modal/DatePickerModal"; // 추가
 import "./RoomDetail.css";
-import { reviews } from "../data/reviews";
+import { useEffect } from 'react';
+import { getRoomDetailApi } from '../api/roomApi';
+import { getMyReviewByRoomApi, getRoomReveiwsApi } from '../api/reviewApi';
 
 const RoomDetail = () => {
   const [wish, setWish] = useState(false);
@@ -19,12 +21,55 @@ const RoomDetail = () => {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
+  const [room, setRoom] = useState(null);
+  const [myReview, setMyReview] = useState(null);
+  const [reviewSlice, setReviewSlice] = useState({content:[], hasNext: false});
+  const [loading, setLoading] = useState(true);
+
   const toggleWish = () => setWish(!wish);
 
   // 리뷰 저장
   const handleSaveReview = (data) => {
     console.log("저장된 리뷰:", data);
   };
+
+  useEffect(() => {
+    if (!roomId) return;
+
+    const fetchAll = async () => {
+      setLoading(true);
+
+      const [roomRes, myReviewRes, reviewsRes] = await Promise.allSettled([
+        getRoomDetailApi(roomId),
+        getMyReviewByRoomApi(roomId),
+        getRoomReveiwsApi(roomId, {page:0, size:10}),
+      ]);
+
+      if (roomRes.status === "fulfilled") setRoom(roomRes.value.data);
+      else setRoom(null);
+
+      if (myReviewRes.status === "fulfilled") setMyReview(myReviewRes.value.data);
+      else setMyReview(null);
+
+      if(reviewsRes.status === "fulfilled") {
+        const data = reviewsRes.value.data;
+        setReviewSlice({content: data?.content ?? [], hasNext: !!data?.hasNext});
+      } else {
+        setReviewSlice({content: [], hasNext: false});
+      }
+
+      setLoading(false);
+    }
+    fetchAll();
+  },[roomId]);
+
+  const roomTitle = room?.name?? "방 제목";
+  const avgRating = room?.rating ?? 0;
+  const genresText = room?.genres ? Array.from(room.genres).join(",") : '-';
+
+  const otherReviews = myReview
+    ? reviewSlice.content.filter((r) => r.reviewId !== myReview.reviewId)
+    : reviewSlice.content;
 
   return (
     <Layout>
@@ -37,7 +82,7 @@ const RoomDetail = () => {
 
           <div className="info-wrap">
             <div className="title-bookmark-wrap">
-              <h1 className="room-title">방탈출 예시 제목</h1>
+              <h1 className="room-title">{roomTitle}</h1>
               <span className="bookmark-icon" onClick={toggleWish}>
                 {wish ? "🔖" : "📑"}
               </span>
@@ -45,10 +90,14 @@ const RoomDetail = () => {
 
             <div className="rating-section">
               <div className="rating-left">
-                <StarRating initialRating={3.5} onChange={(value) => console.log("선택 점수:", value)} note="평가하기" />
+                <StarRating
+                  initialRating={myReview?.rating ?? avgRating}
+                  onChange={(value) => console.log("선택 점수:", value)}
+                  note="평가하기"
+                />
               </div>
               <div className="rating-right">
-                <div className="rating-score-main">3.5</div>
+                <div className="rating-score-main">{avgRating}</div>
                 <div className="avg-label">평균별점 (1,234명)</div>
               </div>
             </div>
@@ -57,27 +106,24 @@ const RoomDetail = () => {
 
             <div className="action-buttons-row">
               <button className="action-btn" onClick={() => setIsReviewModalOpen(true)}>
-                💬 평가하기
+                💬 {myReview ? "내 리뷰 수정" : "평가하기"}
               </button>
 
               <button className="action-btn" onClick={() => setIsDateModalOpen(true)}>
-                {selectedDate ? `📅 탈출일: ${selectedDate}` : "📅 탈출일"}
+                {myReview?.escapeDate ? `📅 탈출일: ${myReview.escapeDate}` : "📅 탈출일"}
               </button>
             </div>
 
             <hr className="detail-hr" />
 
             <div className="info-grid">
-              <div className="info-item">장르: 공포</div>
-              <div className="info-item">난이도: 3</div>
-              <div className="info-item">시간: 60분</div>
-              <div className="info-item">인원수: 2~6명</div>
-              <div className="info-item">매장: 강남점</div>
+              <div className="info-item">장르: {genresText}</div>
+              <div className="info-item">난이도: {room?.difficulty ?? "-"}</div>
+              <div className="info-item">시간: {room?.playTimeMinutes ?? "-"}분</div>
+              <div className="info-item">인원수: {room?.minPlayers ?? "-"}~{room?.maxPlayers ?? "-"}명</div>
+              <div className="info-item">매장: {room?.storeName ?? "-"}</div>
             </div>
-
-            <div className="description">
-              방탈출에 대한 자세한 설명이 들어가는 영역입니다. 스토리, 분위기, 체감 난이도, 특징 등을 간략하게 적는 공간입니다.
-            </div>
+            <div className="description">{room?.description ?? "-"}</div>
           </div>
         </div>
 
@@ -85,23 +131,25 @@ const RoomDetail = () => {
         <div className="review-section">
           <div className="review-header">
             <h2 className="review-title">평가</h2>
-            <span className="review-count">950+</span>
+            <span className="review-count">{otherReviews.length}+</span>
             <button className="review-more" 
-                    onClick={() => navigate(`/room/${roomId}/reviews`)}>더보기</button>
+                    onClick={() => navigate(`/room/${roomId}/reviews`)}>
+              더보기
+            </button>
           </div>
 
           <div className="review-card-grid">
-            {reviews.slice(0,6).map((r) => (
+            {otherReviews.slice(0,6).map((r) => (
               <ReviewCard
-                key={r.id}
-                reviewId={r.id}
-                user={r.user}
-                userImg={r.userImg}
-                score={r.score}
-                text={r.text}
-                date={r.date}
-                likes={r.likes}
-                replies={r.replies}
+                key={r.reviewId}
+                reviewId={r.reviewId}
+                user={r.userSummary?.name}
+                userImg={r.userSummary?.profileImgUrl}
+                score={r.rating}
+                text={r.content}
+                date={r.createdAt ?? "-"}
+                likes={r.likeCount}
+                replies={r.commentCount}
                 isSummary={true}
               />
             ))}
@@ -112,7 +160,7 @@ const RoomDetail = () => {
         <ReviewModal
           isOpen={isReviewModalOpen}
           onClose={() => setIsReviewModalOpen(false)}
-          roomTitle="방탈출 예시 제목"
+          roomTitle={roomTitle}
           onSave={handleSaveReview}
         />
 

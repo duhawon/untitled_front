@@ -5,3 +5,7 @@ export const getRoomsApi = ({query, page = 0, size = 10} = {}) => {
         params: {query, page, size},
     });
 };
+
+export const getRoomDetailApi = (roomId) => {
+    return api.get(`/rooms/${roomId}`);
+}
