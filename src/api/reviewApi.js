@@ -1,8 +1,8 @@
 import api from './axiosInstance'
 
-export const getRoomReveiwsApi = (roomId, {page = 0, size = 10}) => {
+export const getRoomReviewsApi = (roomId, {page = 0, size = 10, sort = "new"}) => {
     return api.get(`/rooms/${roomId}/reviews`, {
-        params: {page, size}
+        params: {page, size, sort}
     });
 }
 export const getMyReviewByRoomApi = (roomId) => {

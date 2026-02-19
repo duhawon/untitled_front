@@ -8,7 +8,7 @@ import DatePickerModal from "../components/Modal/DatePickerModal"; // 추가
 import "./RoomDetail.css";
 import { useEffect } from 'react';
 import { getRoomDetailApi } from '../api/roomApi';
-import { getMyReviewByRoomApi, getRoomReveiwsApi } from '../api/reviewApi';
+import { getMyReviewByRoomApi, getRoomReviewsApi } from '../api/reviewApi';
 
 const RoomDetail = () => {
   const [wish, setWish] = useState(false);
@@ -42,7 +42,7 @@ const RoomDetail = () => {
       const [roomRes, myReviewRes, reviewsRes] = await Promise.allSettled([
         getRoomDetailApi(roomId),
         getMyReviewByRoomApi(roomId),
-        getRoomReveiwsApi(roomId, {page:0, size:10}),
+        getRoomReviewsApi(roomId, {page:0, size:10, sort: "likes"}),
       ]);
 
       if (roomRes.status === "fulfilled") setRoom(roomRes.value.data);
