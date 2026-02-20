@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import ReviewCard from "../components/Card/Review/ReviewCard";
 import "./ReviewList.css";
-import { reviews } from "../data/reviews";
 import { getRoomReviewsApi } from '../api/reviewApi';
 import { useCallback } from 'react';
 import { useRef } from 'react';

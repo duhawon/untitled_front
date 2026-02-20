@@ -41,7 +41,7 @@ const ReviewCard = ({
 
   const navigate = useNavigate();
   const displayText =
-    isSummary && text.length > 100 ? text.slice(0, 100) + "..." : text;
+    isSummary && text?.length > 100 ? text.slice(0, 100) + "..." : text;
   const goToDetail = () => {
     if (!disableNavigation) {
       navigate(`/review/${reviewId}`);

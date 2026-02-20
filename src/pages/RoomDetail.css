@@ -234,3 +234,120 @@
     grid-template-columns: 1fr;
   }
 }
+/* ✅ 내 리뷰 요약 박스 */
+.my-review-box {
+  margin-top: 10px;
+  padding: 14px 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.my-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.my-review-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #222;
+}
+
+.my-review-meta {
+  font-size: 13px;
+  color: #666;
+}
+
+.my-review-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-line;
+  margin-bottom: 10px;
+}
+/* 팝오버 박스: 메뉴처럼 */
+.review-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  z-index: 9999;
+
+  min-width: 160px;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+
+  display: flex;          /* ✅ 세로 2행 */
+  flex-direction: column; /* ✅ */
+  gap: 4px;               /* ✅ 버튼 사이 간격 */
+}
+
+/* 메뉴 아이템 버튼: 더 예쁘게 */
+.review-popover-item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: 0;
+  background: #fafafa;      /* ✅ 버튼 배경 */
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+
+  display: flex;            /* ✅ 텍스트 정렬 안정 */
+  align-items: center;
+  justify-content: flex-start;
+
+  transition: transform 0.08s ease, background 0.12s ease;
+}
+
+.review-popover-item:hover {
+  background: #f1f1f1;
+}
+
+.review-popover-item:active {
+  transform: scale(0.98);
+}
+
+/* 삭제 버튼만 강조 */
+.review-popover-item.danger {
+  background: #fff5f5;
+  color: #d32f2f;
+}
+
+.review-popover-item.danger:hover {
+  background: #ffecec;
+}
+
+.my-review-wrapper {
+  width: 100%;
+}
+
+.my-review-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  margin: 6px 0 4px; /* 위-아래 간격 */
+  padding-left: 4px;
+}
+
+/* 기존꺼 유지 + 추천 옵션 */
+.my-review-content-bar {
+  width: 100%;
+  box-sizing: border-box; /* padding 때문에 튀어나오는 거 방지 */
+  background: #f3f3f3;
+  border-radius: 8px;
+  margin: 0 0 8px;       /* 타이틀 아래에 오니까 위쪽 margin은 0 */
+  padding: 12px 14px;    /* 좌우 여백 */
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-line;
+}

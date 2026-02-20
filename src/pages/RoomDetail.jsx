@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import StarRating from "../components/StarRating/StarRating";
 import ReviewCard from "../components/Card/Review/ReviewCard";
@@ -8,9 +8,12 @@ import DatePickerModal from "../components/Modal/DatePickerModal"; // 추가
 import "./RoomDetail.css";
 import { useEffect } from 'react';
 import { getRoomDetailApi } from '../api/roomApi';
-import { getMyReviewByRoomApi, getRoomReviewsApi } from '../api/reviewApi';
+import { createReviewApi, deleteReviewApi, getMyReviewByRoomApi, getRoomReviewsApi, updateReviewApi } from '../api/reviewApi';
+import { useSelector } from 'react-redux';
 
 const RoomDetail = () => {
+  const { isLoggedIn, userInfo } = useSelector((state) => state.auth);
+
   const [wish, setWish] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
@@ -26,42 +29,135 @@ const RoomDetail = () => {
   const [reviewSlice, setReviewSlice] = useState({content:[], hasNext: false});
   const [loading, setLoading] = useState(true);
 
-  const toggleWish = () => setWish(!wish);
+  const [myRating, setMyRating] = useState(null);
+  const [saving, setSaving] = useState(false);
 
-  // 리뷰 저장
-  const handleSaveReview = (data) => {
-    console.log("저장된 리뷰:", data);
-  };
+  const [isReviewMenuOpen, setIsReviewMenuOpen] = useState(false);
+  const reviewBtnWrapRef = useRef(null);
+
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!isReviewMenuOpen) return;
+      if (reviewBtnWrapRef.current && !reviewBtnWrapRef.current.contains(e.target)) {
+        setIsReviewMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [isReviewMenuOpen]);
+
+  const toggleWish = () => setWish(!wish);
+  
+  const refreshAll = async () => {
+    const [roomRes, myReviewRes, reviewsRes] = await Promise.allSettled([
+      getRoomDetailApi(roomId),
+      isLoggedIn ? getMyReviewByRoomApi(roomId) : Promise.resolve({ data: null}),
+      getRoomReviewsApi(roomId, {page:0, size:10, sort: "likes"}),
+    ]);
+
+    if (roomRes.status === "fulfilled") setRoom(roomRes.value.data);
+    else setRoom(null);
+
+    if (myReviewRes.status === "fulfilled") {
+      setMyReview(myReviewRes.value.data);
+      setMyRating(myReviewRes.value.data?.rating ?? myRating);
+    } else {
+      setMyReview(null);
+      setMyRating(null);
+    }
+
+    if(reviewsRes.status === "fulfilled") {
+      const data = reviewsRes.value.data;
+      setReviewSlice({content: data?.content ?? [], hasNext: !!data?.hasNext});
+    } else {
+      setReviewSlice({content: [], hasNext: false});
+    }
+  }
 
   useEffect(() => {
     if (!roomId) return;
-
-    const fetchAll = async () => {
-      setLoading(true);
-
-      const [roomRes, myReviewRes, reviewsRes] = await Promise.allSettled([
-        getRoomDetailApi(roomId),
-        getMyReviewByRoomApi(roomId),
-        getRoomReviewsApi(roomId, {page:0, size:10, sort: "likes"}),
-      ]);
-
-      if (roomRes.status === "fulfilled") setRoom(roomRes.value.data);
-      else setRoom(null);
-
-      if (myReviewRes.status === "fulfilled") setMyReview(myReviewRes.value.data);
-      else setMyReview(null);
-
-      if(reviewsRes.status === "fulfilled") {
-        const data = reviewsRes.value.data;
-        setReviewSlice({content: data?.content ?? [], hasNext: !!data?.hasNext});
-      } else {
-        setReviewSlice({content: [], hasNext: false});
-      }
-
+    setLoading(true);
+    const run = async () => {
+      await refreshAll();
       setLoading(false);
+    };
+    run();
+  }, [roomId, isLoggedIn]);
+  const buildBody = (patch) => {
+    const body = {};
+
+    const rating = patch.rating ?? myReview?.rating ?? myRating;
+    if (rating != null) body.rating = rating;
+
+    const content = patch.content ?? myReview?.content;
+    if (content) body.content = content;
+
+    const spoiler = patch.spoiler ?? myReview?.spoiler;
+    if (spoiler != null) body.spoiler = spoiler;
+
+    return body;
+  }
+  const upsertReview = async (patch) => {
+    if (!roomId  || saving) return;
+    const body = buildBody(patch);
+    if (Object.keys(body).length === 0) return;
+    setSaving(true);
+    try {
+      if (myReview?.reviewId) {
+        await updateReviewApi(myReview.reviewId, body);
+      } else {
+        await createReviewApi({ roomId: Number(roomId), ...body});
+      }
+      await refreshAll();
+    } catch (e) {
+      console.error(e);
     }
-    fetchAll();
-  },[roomId]);
+    setSaving(false);
+  }
+
+  const handleRatingChange = async (value) => {
+    setMyRating(value);
+    await upsertReview({ rating: value});
+  };
+
+  const handleSaveReview = async ({ content, spoiler}) => {
+    await upsertReview({ content, spoiler });
+  };
+  const handleReviewButtonClick = () => {
+    if (!isLoggedIn) {
+      // 원하면 여기서 GuestAuthModal 열기
+      // setIsGuestAuthOpen(true);
+      return;
+    }
+  
+    if (myReview?.reviewId) {
+      // 내 리뷰가 있으면 작은 메뉴 토글
+      setIsReviewMenuOpen((v) => !v);
+    } else {
+      // 없으면 작성 모달 바로
+      setIsReviewModalOpen(true);
+    }
+  };
+  
+  const handleEditReview = () => {
+    setIsReviewMenuOpen(false);
+    setIsReviewModalOpen(true);
+  };
+  
+  const handleDeleteReview = async () => {
+    if (!myReview?.reviewId) return;
+    // TODO : modal창으로 변경
+    const ok = window.confirm("리뷰를 삭제하시겠습니까?");
+    if (!ok) return;
+  
+    setIsReviewMenuOpen(false);
+    try {
+      await deleteReviewApi(myReview.reviewId);
+      await refreshAll();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const roomTitle = room?.name?? "방 제목";
   const avgRating = room?.rating ?? 0;
@@ -70,6 +166,14 @@ const RoomDetail = () => {
   const otherReviews = myReview
     ? reviewSlice.content.filter((r) => r.reviewId !== myReview.reviewId)
     : reviewSlice.content;
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="room-detail-container">Loading...</div>
+      </Layout>
+    )
+  }
 
   return (
     <Layout>
@@ -91,8 +195,8 @@ const RoomDetail = () => {
             <div className="rating-section">
               <div className="rating-left">
                 <StarRating
-                  initialRating={myReview?.rating ?? avgRating}
-                  onChange={(value) => console.log("선택 점수:", value)}
+                  initialRating={myRating ?? 0}
+                  onChange={handleRatingChange}
                   note="평가하기"
                 />
               </div>
@@ -105,17 +209,33 @@ const RoomDetail = () => {
             <hr className="detail-hr" />
 
             <div className="action-buttons-row">
-              <button className="action-btn" onClick={() => setIsReviewModalOpen(true)}>
-                💬 {myReview ? "내 리뷰 수정" : "평가하기"}
+            <div className="review-action-wrap" ref={reviewBtnWrapRef}>
+              <button className="action-btn" onClick={handleReviewButtonClick}>
+                💬 리뷰
               </button>
 
+              {isReviewMenuOpen && myReview?.reviewId && (
+                <div className="review-popover">
+                  <button className="review-popover-item" onClick={handleEditReview}>
+                    리뷰 수정
+                  </button>
+                  <button className="review-popover-item danger" onClick={handleDeleteReview}>
+                    리뷰 삭제
+                  </button>
+                </div>
+              )}
+            </div>
               <button className="action-btn" onClick={() => setIsDateModalOpen(true)}>
                 {myReview?.escapeDate ? `📅 탈출일: ${myReview.escapeDate}` : "📅 탈출일"}
               </button>
             </div>
-
             <hr className="detail-hr" />
-
+            {myReview?.reviewId && (
+  <div className="my-review-wrapper">
+    <div className="my-review-title">내가 쓴 리뷰</div>
+    <div className="my-review-content-bar">{myReview.content}</div>
+  </div>
+)}
             <div className="info-grid">
               <div className="info-item">장르: {genresText}</div>
               <div className="info-item">난이도: {room?.difficulty ?? "-"}</div>
@@ -161,6 +281,7 @@ const RoomDetail = () => {
           isOpen={isReviewModalOpen}
           onClose={() => setIsReviewModalOpen(false)}
           roomTitle={roomTitle}
+          review={myReview}
           onSave={handleSaveReview}
         />
 

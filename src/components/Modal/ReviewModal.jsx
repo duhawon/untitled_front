@@ -2,24 +2,20 @@ import React, { useState, useEffect } from "react";
 import CommonModal from './CommonModal';
 import "./ReviewModal.css";
 
-const ReviewModal = ({ isOpen, onClose, roomTitle, onSave }) => {
+const ReviewModal = ({ isOpen, onClose, roomTitle, onSave, review }) => {
   const [text, setText] = useState("");
   const [spoiler, setSpoiler] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      setText("");
-      setSpoiler(false);
-    }
-  }, [isOpen]);
+    if (!isOpen) return;
+    setText(review?.content ?? "");
+    setSpoiler(review?.spoiler ?? false);
+  }, [isOpen, review]);
 
   const isEmpty = text.trim().length === 0;
 
-  const handleSave = () => {
-    if (isEmpty) return;
-    onSave({ text, spoiler });
-    setText("");
-    setSpoiler(false);
+  const handleSave = async() => {
+    await onSave({ content: text, spoiler });
     onClose();
   };
 
