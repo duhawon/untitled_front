@@ -4,25 +4,6 @@ import CommentModal from "../../Modal/CommentModal";
 import LikeListModal from "../../Modal/LikeListModal";
 import { useNavigate } from "react-router-dom";
 
-// dummy 데이터 예시
-const dummyLikeUsers = [
-  { id: 1, userName: "Bob", userImg: "https://picsum.photos/40?random=2" },
-  { id: 2, userName: "Charlie", userImg: "https://picsum.photos/40?random=3" },
-  { id: 3, userName: "Diana", userImg: "https://picsum.photos/40?random=4" },
-  { id: 4, userName: "Eve", userImg: "https://picsum.photos/40?random=5" },
-  { id: 5, userName: "Frank", userImg: "https://picsum.photos/40?random=6" },
-  { id: 6, userName: "Grace", userImg: "https://picsum.photos/40?random=7" },
-  { id: 7, userName: "Hank", userImg: "https://picsum.photos/40?random=8" },
-  { id: 8, userName: "Ivy", userImg: "https://picsum.photos/40?random=9" },
-  { id: 9, userName: "Jack", userImg: "https://picsum.photos/40?random=10" },
-  { id: 10, userName: "Karen", userImg: "https://picsum.photos/40?random=11" },
-  { id: 11, userName: "Leo", userImg: "https://picsum.photos/40?random=12" },
-  { id: 12, userName: "Mia", userImg: "https://picsum.photos/40?random=13" },
-  { id: 13, userName: "Nina", userImg: "https://picsum.photos/40?random=14" },
-  { id: 14, userName: "Oscar", userImg: "https://picsum.photos/40?random=15" },
-  { id: 15, userName: "Paul", userImg: "https://picsum.photos/40?random=16" }
-];
-
 const ReviewCard = ({
   reviewId,
   user,
@@ -31,7 +12,6 @@ const ReviewCard = ({
   text,
   likes,
   replies,
-  likeUsers = dummyLikeUsers,
   isSummary,
   disableNavigation = false,
 }) => {
@@ -132,7 +112,8 @@ const ReviewCard = ({
       <LikeListModal
         isOpen={isLikeListOpen}
         onClose={() => setIsLikeListOpen(false)}
-        likes={likeUsers}
+        targetType="REVIEW"
+        targetId={reviewId}
       />
     </>
   );
