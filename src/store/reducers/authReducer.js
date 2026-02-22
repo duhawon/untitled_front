@@ -4,6 +4,7 @@ const initialState = {
   isLoggedIn: false,
   accessToken: null,
   userInfo: null,
+  isInitialized: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -13,16 +14,18 @@ const authReducer = (state = initialState, action) => {
           ...state,
           isLoggedIn: true,
           accessToken: action.payload.accessToken,
-          userInfo: action.payload.userInfo
+          userInfo: action.payload.userInfo,
+          isInitialized: true,
         };
       case REFRESH_ACCESS_TOKEN:
         return {
           ...state,
-          accessToken: action.payload
+          accessToken: action.payload,
+          isInitialized: true,
         }
       case LOGOUT:
       case CLEAR_AUTH:
-        return initialState;
+        return { ...initialState, isInitialized: true};
 
       default:
         return state;

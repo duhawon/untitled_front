@@ -9,7 +9,7 @@ import { logout } from '../../../store/actions/authActions';
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { isLoggedIn, userInfo } = useSelector((state) => state.auth);
+    const { isLoggedIn, userInfo, isInitialized } = useSelector((state) => state.auth);
 
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isSignupOpen, setIsSignupOpen] = useState(false);
@@ -35,7 +35,9 @@ const Header = () => {
                         }
                     }}
                 />
-                {isLoggedIn ? (
+                { !isInitialized ? (
+                    <div style={{ width: 160 }} /> 
+                ): isLoggedIn ? (
                     <div className="header-user-info">
                         <img
                             src={userInfo?.profileUrl || '/default-profile.png'}

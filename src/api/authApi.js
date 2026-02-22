@@ -10,3 +10,7 @@ export const signInApi = (email, password) => {
 export const signOutApi = () => {
     return api.post('/auth/signOut');
 };
+
+export const reissueApi = () => {
+    return api.post('/auth/reissue');
+}
