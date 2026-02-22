@@ -24,9 +24,12 @@ const ReviewDetail = () => {
   // DESC : 무한스크롤 트리거
   const commentScrollRef = useRef(null);
   const sentinelRef = useRef(null);
+  const inFlightRef = useRef(false);
 
   const fetchCommentsPage = useCallback(
     async (pageToFetch, append) => {
+      if (!reviewId) return;
+
       const res = await getReviewCommentsApi(reviewId, {
         page: pageToFetch,
         size: PAGE_SIZE,
@@ -55,8 +58,9 @@ const ReviewDetail = () => {
     setReview(null);
     setLoadingReview(true);
 
-    setCommentSlice({ content: [], hasNext: true, page: 0, size: PAGE_SIZE });
+    setCommentSlice({ content: [], hasNext: false, page: 0, size: PAGE_SIZE });
     setLoadingComments(false);
+    inFlightRef.current = false;
 
     if (commentScrollRef.current) commentScrollRef.current.scrollTop = 0;
   }, [reviewId]);
@@ -67,6 +71,8 @@ const ReviewDetail = () => {
     const init = async () => {
       setLoadingReview(true);
       setLoadingComments(true);
+
+      inFlightRef.current = true;
       try {
         await Promise.all([
           fetchReview(),
@@ -75,24 +81,33 @@ const ReviewDetail = () => {
       } catch (e) {
         console.error(e);
         setReview(null);
-        setCommentSlice({ content: [], hasNext: true, page: 0, size: PAGE_SIZE });
+        setCommentSlice({ content: [], hasNext: false, page: 0, size: PAGE_SIZE });
+      } finally {
+        setLoadingReview(false);
+        setLoadingComments(false);
+        inFlightRef.current = false;
       }
-      setLoadingReview(false);
-      setLoadingComments(false);
     }
     init();
   }, [reviewId, fetchReview, fetchCommentsPage])
 
-  const loadMoreComments = useCallback(async () => {
-    if (loadingComments || !commentSlice) return;
+  const loadMore = useCallback(async () => {
+    if (!reviewId) return;
+
+    if(!commentSlice.hasNext) return;
+
+    if (inFlightRef.current) return;
+    inFlightRef.current = true;
 
     setLoadingComments(true);
     try {
       await fetchCommentsPage(commentSlice.page, true);
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoadingComments(false);
+      inFlightRef.current = false;
     }
-    setLoadingComments(false);
   },[setLoadingComments, commentSlice.hasNext, commentSlice.page, fetchCommentsPage]);
 
   useEffect(() => {
@@ -103,7 +118,7 @@ const ReviewDetail = () => {
 
     const obs = new IntersectionObserver(
       (entires) => {
-        if (entires[0].isIntersecting) loadMoreComments();
+        if (entires[0].isIntersecting) loadMore();
       },
       {
         root: rootEl,
@@ -112,7 +127,7 @@ const ReviewDetail = () => {
     );
     obs.observe(targetEl);
     return () => obs.disconnect();
-  }, [loadMoreComments]);
+  }, [loadMore]);
 
   if (loadingReview) return <Layout>Loading...</Layout>;
   if (!review) return <Layout>리뷰를 찾을 수 없습니다.</Layout>;
@@ -123,6 +138,7 @@ const ReviewDetail = () => {
         {/* 상단 상세 리뷰 */}
         <div className="selected-review">
           <ReviewCard
+            reviewId={review.reviewId ?? reviewId}
             user={review.userSummary?.name}
             userImg={review.userSummary?.profileImgUrl}
             score={review.rating}
