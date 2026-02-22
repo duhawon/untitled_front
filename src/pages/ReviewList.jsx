@@ -42,7 +42,7 @@ const ReviewList = () => {
         let nextPage = 1;
 
         if (hasNext) {
-          const r1 = await getRoomReviewsApi(roomId, {page: 1, size: PAGE_SIZE});
+          const r1 = await getRoomReviewsApi(roomId, {page: 1, size: PAGE_SIZE, sort});
           const d1 = r1.data;
           content = [...content, ...(d1?.content ?? [])];
           hasNext = !!d1?.hasNext;
