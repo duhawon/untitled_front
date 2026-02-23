@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import StarRating from "../components/StarRating/StarRating";
 import ReviewCard from "../components/Card/Review/ReviewCard";
@@ -12,7 +12,7 @@ import { createReviewApi, deleteReviewApi, getMyReviewByRoomApi, getRoomReviewsA
 import { useSelector } from 'react-redux';
 
 const RoomDetail = () => {
-  const { isLoggedIn, userInfo } = useSelector((state) => state.auth);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   const [wish, setWish] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -48,7 +48,7 @@ const RoomDetail = () => {
 
   const toggleWish = () => setWish(!wish);
   
-  const refreshAll = async () => {
+  const refreshAll = useCallback(async () => {
     const [roomRes, myReviewRes, reviewsRes] = await Promise.allSettled([
       getRoomDetailApi(roomId),
       isLoggedIn ? getMyReviewByRoomApi(roomId) : Promise.resolve({ data: null}),
@@ -60,7 +60,7 @@ const RoomDetail = () => {
 
     if (myReviewRes.status === "fulfilled") {
       setMyReview(myReviewRes.value.data);
-      setMyRating(myReviewRes.value.data?.rating ?? myRating);
+      setMyRating(myReviewRes.value.data?.rating ?? null);
     } else {
       setMyReview(null);
       setMyRating(null);
@@ -72,7 +72,7 @@ const RoomDetail = () => {
     } else {
       setReviewSlice({content: [], hasNext: false});
     }
-  }
+  }, [roomId, isLoggedIn]);
 
   useEffect(() => {
     if (!roomId) return;
@@ -82,7 +82,7 @@ const RoomDetail = () => {
       setLoading(false);
     };
     run();
-  }, [roomId, isLoggedIn]);
+  }, [roomId, refreshAll]);
   const buildBody = (patch) => {
     const body = {};
 
