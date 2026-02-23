@@ -3,20 +3,23 @@ import "./ReviewCard.css";
 import CommentModal from "../../Modal/CommentModal";
 import LikeListModal from "../../Modal/LikeListModal";
 import { useNavigate } from "react-router-dom";
+import { likeApi, unlikeApi } from '../../../api/likeApi';
 
+const TARGET_TYPE = "REVIEW";
 const ReviewCard = ({
   reviewId,
   user,
   userImg,
   score,
   text,
-  likes,
+  likeCount,
   replies,
   isSummary,
   disableNavigation = false,
   onCommentSaved
 }) => {
   const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(likeCount ?? 0);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isLikeListOpen, setIsLikeListOpen] = useState(false);
 
@@ -28,7 +31,29 @@ const ReviewCard = ({
       navigate(`/review/${reviewId}`);
     }
   };
-
+  const toggleLike = async() => {
+    if (liked) {
+      setLiked(false);
+      setLikes(prev => Math.max(prev - 1,0));
+      try {
+        await unlikeApi(TARGET_TYPE, reviewId);
+      } catch(e) {
+        setLiked(true);
+        setLikes(prev => prev + 1);
+        console.error(e);
+      }
+    } else {
+      setLiked(true);
+      setLikes(prev => prev + 1);
+      try {
+        await likeApi(TARGET_TYPE, reviewId);
+      } catch(e) {
+        setLiked(false);
+        setLikes(prev => Math.max(prev - 1,0));
+        console.error(e);
+      }
+    }
+  };
   return (
     <>
       <div className="review-card">
@@ -83,7 +108,7 @@ const ReviewCard = ({
             {/* 좋아요 버튼 */}
             <span
               className={`action-btn ${liked ? "liked" : ""}`}
-              onClick={() => setLiked(!liked)}
+              onClick={() => toggleLike()}
             >
               ❤️ 좋아요
             </span>

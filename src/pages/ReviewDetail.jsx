@@ -148,7 +148,7 @@ const ReviewDetail = () => {
             score={review.rating}
             text={review.content}
             date={"-"}
-            likes={review.likeCount}
+            likeCount={review.likeCount}
             replies={review.commentCount}
             isSummary={false} // 상세 모드
             disableNavigation={true} // 클릭 막기

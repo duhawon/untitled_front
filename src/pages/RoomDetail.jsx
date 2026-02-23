@@ -268,7 +268,7 @@ const RoomDetail = () => {
                 score={r.rating}
                 text={r.content}
                 date={r.createdAt ?? "-"}
-                likes={r.likeCount}
+                likeCount={r.likeCount}
                 replies={r.commentCount}
                 isSummary={true}
               />

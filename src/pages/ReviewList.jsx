@@ -140,7 +140,7 @@ const ReviewList = () => {
                 score={r.rating}
                 text={r.content}
                 date={"-"}
-                likes={r.likeCount}
+                likeCount={r.likeCount}
                 replies={r.commentCount}
               />
             </div>
