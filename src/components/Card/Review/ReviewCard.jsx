@@ -14,6 +14,7 @@ const ReviewCard = ({
   replies,
   isSummary,
   disableNavigation = false,
+  onCommentSaved
 }) => {
   const [liked, setLiked] = useState(false);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
@@ -100,12 +101,10 @@ const ReviewCard = ({
 
       {/* 댓글 작성 모달 */}
       <CommentModal
+        reviewId={reviewId}
         isOpen={isCommentModalOpen}
         onClose={() => setIsCommentModalOpen(false)}
-        onSave={(txt) => {
-          console.log("저장된 댓글:", txt);
-          setIsCommentModalOpen(false);
-        }}
+        onSave={() => onCommentSaved()}
       />
 
       {/* 좋아요 목록 모달 */}

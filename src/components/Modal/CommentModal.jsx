@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CommonModal from './CommonModal';
 import "./CommentModal.css";
+import { createReviewCommentApi, updateReviewCommentApi } from '../../api/reviewCommentApi';
 
-const CommentModal = ({ isOpen, onClose, onSave }) => {
-  const [text, setText] = useState("");
+const CommentModal = ({ reviewId, commentId, data, isOpen, onClose, onSave }) => {
+  const [content, setContent] = useState(data ?? "");
+  const isEmpty = content.trim().length === 0;
 
-  // 모달 열리면 텍스트 초기화(선택적)
-  useEffect(() => {
-    if (isOpen) setText("");
-  }, [isOpen]);
-
-  const isEmpty = text.trim().length === 0;
-
-  const handleSave = () => {
+  const handleSave = async () => {
     if (isEmpty) return;
-    onSave(text);
-    setText("");
+    try {
+      if(!commentId) {
+        await createReviewCommentApi(reviewId, content);
+      } else {
+        await updateReviewCommentApi(reviewId, commentId, content);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setContent("");
+      onSave();
+    }
   };
 
   return (
@@ -27,13 +32,13 @@ const CommentModal = ({ isOpen, onClose, onSave }) => {
       <textarea
         className="comment-modal-textarea"
         placeholder="댓글을 입력하세요…"
-        value={text}
+        value={content}
         maxLength={10000}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => setContent(e.target.value)}
       />
 
       <div className="comment-modal-footer">
-        <span className="comment-count">{text.length}/10000</span>
+        <span className="comment-count">{content.length}/10000</span>
         <button
           className={`comment-save-btn ${isEmpty ? "disabled" : ""}`}
           disabled={isEmpty}

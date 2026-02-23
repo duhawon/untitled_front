@@ -1,22 +1,75 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { formatDateYYYYMMDD } from '../../../utils/date';
 import "./CommentCard.css";
+import CommentModal from "../../Modal/CommentModal";
+import LikeListModal from "../../Modal/LikeListModal";
+import { deleteReviewCommentApi } from '../../../api/reviewCommentApi';
+import { likeApi, unlikeApi } from '../../../api/likeApi';
 
-const CommentCard = ({ comment }) => {
+const TARGET_TYPE = "REVIEW_COMMENT";
+const CommentCard = ({ reviewId, comment, onCommentSaved }) => {
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(comment.likeCount ?? 0);
+  const [likes, setLikes] = useState(comment.likeCount ?? 0);
+  
+  const myUserId = useSelector((state) => state.auth.userInfo.userId);
+  const authorId = comment?.userSummary.userId;
+  const isMine = !!myUserId && !!authorId && myUserId === authorId;
 
-  const toggleLike = () => {
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [isLikeListOpen, setIsLikeListOpen] = useState(false);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!menuRef.current) return;
+      if (!menuRef.current.contains(e.target)) setMenuOpen(false);
+    };
+    if (menuOpen) document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, [menuOpen]);
+  const onEdit = () => {
+    setMenuOpen(false);
+    setIsCommentModalOpen(true);
+  };
+  const onDelete = async () => {
+    setMenuOpen(false);
+    try {
+      await deleteReviewCommentApi(reviewId, comment.commentId);
+      onCommentSaved();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  const toggleLike = async() => {
     if (liked) {
       setLiked(false);
-      setLikeCount(prev => Math.max(prev - 1,0));
+      setLikes(prev => Math.max(prev - 1,0));
+      try {
+        await unlikeApi(TARGET_TYPE, comment.commentId);
+      } catch(e) {
+        setLiked(true);
+        setLikes(prev => prev + 1);
+        console.error(e);
+      }
     } else {
       setLiked(true);
-      setLikeCount(prev => prev + 1);
+      setLikes(prev => prev + 1);
+      try {
+        await likeApi(TARGET_TYPE, comment.commentId);
+      } catch(e) {
+        setLiked(false);
+        setLikes(prev => Math.max(prev - 1,0));
+        console.error(e);
+      }
     }
   };
 
   return (
+    <>
     <div className="comment-card">
       {/* 프로필 이미지 */}
       <img
@@ -36,16 +89,64 @@ const CommentCard = ({ comment }) => {
 
         {/* 좋아요 버튼 */}
         <div className="comment-actions">
-          <button
-            className={`like-btn ${liked ? "liked" : ""}`}
-            onClick={toggleLike}
-          >
-            👍 좋아요
-          </button>
-          <span className="like-count">좋아요 {likeCount}</span>
+          <div className="comment-actions-left">
+            <button
+              className={`like-btn ${liked ? "liked" : ""}`}
+              onClick={toggleLike}
+            >
+              👍 좋아요
+            </button>
+            <span
+              className="like-count"
+              onClick={() => setIsLikeListOpen(true)}>
+              좋아요 {likes}
+            </span>
+          </div>
+            {isMine && (
+              <div className="comment-actions-right" ref={menuRef}>
+                <button
+                  className="comment-more-btn"
+                  onClick={() => setMenuOpen((v) => !v)}
+                  type="button"
+                  aria-label="댓글 메뉴"
+                >
+                  ⋮
+                </button>
+
+                {menuOpen && (
+                <div className="comment-more-menu" >
+                  <button className="comment-more-item" onClick={onEdit} type="button">
+                    수정
+                  </button>
+                  <button
+                    className="comment-more-item danger"
+                    onClick={onDelete}
+                    type="button"
+                  >
+                    삭제
+                  </button>
+                </div>
+              )}
+                </div>
+              )}
         </div>
       </div>
     </div>
+    <CommentModal
+      reviewId={reviewId}
+      commentId={comment.commentId}
+      data={comment.content}
+      isOpen={isCommentModalOpen}
+      onClose={() => setIsCommentModalOpen(false)}
+      onSave={() => onCommentSaved()}
+    />
+    <LikeListModal
+        isOpen={isLikeListOpen}
+        onClose={() => setIsLikeListOpen(false)}
+        targetType="REVIEW_COMMENT"
+        targetId={comment.commentId}
+      />
+    </>
   );
 };
 

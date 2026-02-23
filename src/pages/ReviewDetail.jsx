@@ -52,27 +52,19 @@ const ReviewDetail = () => {
     setReview(res.data);
   }, [reviewId]);
 
-  useEffect(() => {
-    if(!reviewId) return;
+  const reloadAll = useCallback(
+    async ({ resetScroll } = { resetScroll: true }) => {
+      if (!reviewId) return;
 
-    setReview(null);
-    setLoadingReview(true);
+      if (inFlightRef.current) return;
+      inFlightRef.current = true;
 
-    setCommentSlice({ content: [], hasNext: false, page: 0, size: PAGE_SIZE });
-    setLoadingComments(false);
-    inFlightRef.current = false;
-
-    if (commentScrollRef.current) commentScrollRef.current.scrollTop = 0;
-  }, [reviewId]);
-
-  useEffect(() => {
-    if(!reviewId) return;
-
-    const init = async () => {
       setLoadingReview(true);
       setLoadingComments(true);
 
-      inFlightRef.current = true;
+      if (resetScroll && commentScrollRef.current) {
+        commentScrollRef.current.scrollTop = 0;
+      }
       try {
         await Promise.all([
           fetchReview(),
@@ -87,9 +79,21 @@ const ReviewDetail = () => {
         setLoadingComments(false);
         inFlightRef.current = false;
       }
-    }
-    init();
-  }, [reviewId, fetchReview, fetchCommentsPage])
+    }, [reviewId, fetchReview, fetchCommentsPage]);
+
+  useEffect(() => {
+    if(!reviewId) return;
+
+    setReview(null);
+    setLoadingReview(true);
+    setCommentSlice({ content: [], hasNext: false, page: 0, size: PAGE_SIZE });
+    setLoadingComments(false);
+    inFlightRef.current = false;
+
+    if (commentScrollRef.current) commentScrollRef.current.scrollTop = 0;
+    reloadAll({ resetScroll: true });
+  }, [reviewId, reloadAll]);
+
 
   const loadMore = useCallback(async () => {
     if (!reviewId) return;
@@ -108,7 +112,7 @@ const ReviewDetail = () => {
       setLoadingComments(false);
       inFlightRef.current = false;
     }
-  },[setLoadingComments, commentSlice.hasNext, commentSlice.page, fetchCommentsPage]);
+  },[reviewId, setLoadingComments, commentSlice.hasNext, commentSlice.page, fetchCommentsPage]);
 
   useEffect(() => {
     const rootEl = commentScrollRef.current;
@@ -148,6 +152,7 @@ const ReviewDetail = () => {
             replies={review.commentCount}
             isSummary={false} // 상세 모드
             disableNavigation={true} // 클릭 막기
+            onCommentSaved={() => reloadAll({ resetScroll: false})}
           />
         </div>
 
@@ -156,7 +161,12 @@ const ReviewDetail = () => {
           <h3 className="comments-title">댓글 ({review.commentCount})</h3>
           <div className="comments-list" ref={commentScrollRef}>
             {commentSlice.content.map(c => (
-              <CommentCard key={c.id} comment={c} />
+              <CommentCard
+                reviewId={review.reviewId ?? reviewId}
+                key={c.commentId}
+                comment={c}
+                onCommentSaved={() => reloadAll({ resetScroll: false})}
+              />
             ))}
             <div ref={sentinelRef} style={{height: 1}}></div>
             {loadingComments && <div style={{ padding: 12 }}>Loading...</div>}

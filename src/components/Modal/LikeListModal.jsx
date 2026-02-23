@@ -15,6 +15,9 @@ const LikeListModal = ({ isOpen, onClose, targetType, targetId }) => {
     page: 0,
     size: PAGE_SIZE
   })
+  const scrollRef = useRef(null);
+  const sentinelRef = useRef(null);
+  
   const fetchLikeUsers = useCallback( async(page, mode) => {
     if (!isOpen || !targetId) return;
 
@@ -44,15 +47,10 @@ const LikeListModal = ({ isOpen, onClose, targetType, targetId }) => {
     }, [isOpen, targetId, targetType]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !targetId) return;
     setLoading(false);
     setLikeSlice({ content: [], hasNext: true, page: 0, size: PAGE_SIZE });
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
-  }, [isOpen]);
-
-  // DESC : init
-  useEffect(() => {
-    if (!isOpen || !targetId) return;
     fetchLikeUsers(0, "replace");
   }, [isOpen, targetId, targetType, fetchLikeUsers]);
 
@@ -61,9 +59,6 @@ const LikeListModal = ({ isOpen, onClose, targetType, targetId }) => {
     await fetchLikeUsers(likeSlice.page, "append");
   }, [isOpen, targetId, loading, likeSlice.hasNext, likeSlice.page, fetchLikeUsers]);
   
-  // DESC : 무한스크롤 트리거
-  const scrollRef = useRef(null);
-  const sentinelRef = useRef(null);
   // DESC : 무한스크롤
   useEffect(() => {
     if (!isOpen) return;
