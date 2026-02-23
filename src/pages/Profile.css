@@ -250,3 +250,39 @@
     pointer-events: none;
     background: none !important;
 }
+
+.profile-img-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.profile-img-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  transition: opacity 0.15s ease;
+}
+
+.profile-img-wrapper:hover .profile-img-overlay {
+  opacity: 1;
+}
+
+.profile-big-img.uploading {
+  filter: blur(1px);
+  opacity: 0.85;
+}
+
+.profile-error {
+  margin-top: 8px;
+  color: #d33;
+  font-size: 13px;
+}

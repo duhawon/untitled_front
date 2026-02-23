@@ -40,7 +40,7 @@ const Header = () => {
                 ): isLoggedIn ? (
                     <div className="header-user-info">
                         <img
-                            src={userInfo?.profileUrl || '/default-profile.png'}
+                            src={userInfo?.profileImgUrl || '/default-profile.png'}
                             alt="프로필"
                             className="profile-img"
                             onClick={() => navigate(`/profile/${userInfo.userId}`)}

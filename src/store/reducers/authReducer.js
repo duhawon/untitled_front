@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGOUT, REFRESH_ACCESS_TOKEN, CLEAR_AUTH } from '../actions/authActions';
+import { LOGIN_SUCCESS, LOGOUT, REFRESH_ACCESS_TOKEN, CLEAR_AUTH, UPDATE_USER_INFO } from '../actions/authActions';
 
 const initialState = {
   isLoggedIn: false,
@@ -26,7 +26,14 @@ const authReducer = (state = initialState, action) => {
       case LOGOUT:
       case CLEAR_AUTH:
         return { ...initialState, isInitialized: true};
-
+      case UPDATE_USER_INFO:
+        return {
+          ...state,
+          userInfo: {
+            ...(state.userInfo ?? {}),
+            ...action.payload,
+          }
+        }
       default:
         return state;
     }

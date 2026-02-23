@@ -2,8 +2,9 @@ import { reissueApi, signOutApi } from '../../api/authApi';
 
 export const LOGIN_SUCCESS = 'auth/LOGIN';
 export const LOGOUT = 'auth/LOGOUT';
-export const REFRESH_ACCESS_TOKEN = 'auth/REFRESH_ACCESS_TOKEN'
-export const CLEAR_AUTH = 'auth/CLEAR_AUTH'
+export const REFRESH_ACCESS_TOKEN = 'auth/REFRESH_ACCESS_TOKEN';
+export const CLEAR_AUTH = 'auth/CLEAR_AUTH';
+export const UPDATE_USER_INFO = 'auth/UPDATE_USER_INFO';
 export const loginSuccess = (accessToken, userInfo) => ({
   type: LOGIN_SUCCESS,
   payload: {
@@ -27,7 +28,7 @@ export const refreshAccessToken = (accessToken) => ({
 
 export const clearAuth = () => ({
   type: CLEAR_AUTH,
-})
+});
 
 export const restoreAuth = () => async (dispatch) => {
   try {
@@ -51,3 +52,8 @@ export const restoreAuth = () => async (dispatch) => {
     return false;
   }
 };
+
+export const updateUserInfo = (partialUserInfo) => ({
+  type: UPDATE_USER_INFO,
+  payload: partialUserInfo,
+});

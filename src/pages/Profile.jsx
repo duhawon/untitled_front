@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import Layout from '../components/Layout/Layout';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Profile.css';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { presignUserProfileApi, updateMyProfileImageApi } from '../api/uploadApi';
+import { uploadToS3ByPresignedUrl } from '../api/s3Upload';
+import { updateUserInfo } from '../store/actions/authActions';
 
 // 날짜별 포스터 데이터 예시
 const escapeRoomData = {
@@ -15,6 +18,72 @@ const escapeRoomData = {
 const Profile = () => {
     const [date, setDate] = useState(new Date());
     const userInfo = useSelector((state) => state.auth.userInfo);
+
+    const dispatch = useDispatch();
+    const fileInputRef = useRef(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
+    const currentProfileUrl = useMemo(() => {
+        return previewUrl || userInfo?.profileImgUrl || '/default-profile.png';
+    },[previewUrl, userInfo]);
+    
+    const openFilePicker = () => {
+        if(isUploading) return;
+        setErrorMsg(null);
+        fileInputRef.current?.click();
+    }
+
+    const onChangeFile = async (e) => {
+        const file = e.target.files?.[0];
+        e.target.value = '';
+        if(!file) return;
+
+        // DESC : 확장자 제한
+        const allowed = ['image/png', 'image/jpeg', 'image/webp'];
+        if(!allowed.includes(file.type)) {
+            setErrorMsg('png/jpg/webp 파일만 업로드 할 수 있습니다.');
+            return;
+        }
+        // DESC : 용량 제한
+        const maxMb = 5;
+        if (file.size > maxMb * 1024 * 1024) {
+            setErrorMsg(`${maxMb}MB 이하만 업로드 할 수 있습니다.`);
+            return;
+        }
+        
+        const localPreview = URL.createObjectURL(file);
+        setPreviewUrl(localPreview);
+
+        try {
+            setIsUploading(true);
+            setErrorMsg(null);
+
+            const presignRes = await presignUserProfileApi({
+                contentType: file.type,
+                originalFileName: file.name,
+            });
+
+            const { uploadUrl, key, publicUrl} = presignRes.data;
+
+            if (!uploadUrl || !key) throw new Error('presign 응답이 올바르지 않습니다.');
+
+            // DESC : 직접 S3에 업로드
+            await uploadToS3ByPresignedUrl(uploadUrl, file);
+            await updateMyProfileImageApi(key);
+
+            dispatch(updateUserInfo({
+                profileImgUrl: publicUrl
+            }));
+            setPreviewUrl(null);
+        } catch(e) {
+            setPreviewUrl(null);
+            setErrorMsg(e?.message || '프로필 이미지 업로드 실패');
+        } finally {
+            setIsUploading(false);
+        }
+    }
 
     // 날짜 타일 내부 요소(포스터 이미지)
     const tileContent = ({ date, view }) => {
@@ -39,17 +108,30 @@ const Profile = () => {
                 <div className="profile-settings">⚙️</div>
 
                 <div className="profile-info">
-                    <img
-                        src={userInfo?.profileUrl || '/default-profile.png'}
-                        alt="프로필"
-                        className="profile-big-img"
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        style={{ display: 'none' }}
+                        onChange={onChangeFile}
                     />
+                    <div className="profile-img-wrapper" onClick={openFilePicker}>
+                        <img
+                            src={currentProfileUrl}
+                            alt="프로필"
+                            className="profile-big-img"
+                        />
+                        <div className='profile-img-overlay'>
+                            {isUploading ? '업로드 중...' : '클릭해서 변경'}
+                        </div>
+                    </div>
                     <div className="profile-info-text">
                         <h2 className="profile-name">{userInfo.name}</h2>
                         <p className="profile-email">{userInfo.email}</p>
                         <p className="profile-follow">
                             팔로워 {userInfo.followers} | 팔로잉 {userInfo.following}
                         </p>
+                        {errorMsg && <p className="profile-error">{errorMsg}</p>}
                     </div>
                 </div>
 
