@@ -15,10 +15,11 @@ const ReviewCard = ({
   likeCount,
   replies,
   isSummary,
+  likedByMe,
   disableNavigation = false,
   onCommentSaved
 }) => {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(likedByMe);
   const [likes, setLikes] = useState(likeCount ?? 0);
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [isLikeListOpen, setIsLikeListOpen] = useState(false);

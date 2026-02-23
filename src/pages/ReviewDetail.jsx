@@ -7,9 +7,12 @@ import "./ReviewDetail.css";
 import { getReviewDetailApi } from '../api/reviewApi';
 import { getReviewCommentsApi } from '../api/reviewCommentApi';
 import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 
 const PAGE_SIZE = 10;
 const ReviewDetail = () => {
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn);
+  const isInitialized = useSelector((state) => state.auth?.isInitialized);
   const { reviewId } = useParams();
   const [review, setReview] = useState(null);
   const [loadingReview, setLoadingReview] = useState(true);
@@ -83,6 +86,7 @@ const ReviewDetail = () => {
 
   useEffect(() => {
     if(!reviewId) return;
+    if (!isInitialized) return; 
 
     setReview(null);
     setLoadingReview(true);
@@ -92,7 +96,7 @@ const ReviewDetail = () => {
 
     if (commentScrollRef.current) commentScrollRef.current.scrollTop = 0;
     reloadAll({ resetScroll: true });
-  }, [reviewId, reloadAll]);
+  }, [reviewId, reloadAll, isLoggedIn, isInitialized]);
 
 
   const loadMore = useCallback(async () => {
@@ -151,6 +155,7 @@ const ReviewDetail = () => {
             likeCount={review.likeCount}
             replies={review.commentCount}
             isSummary={false} // 상세 모드
+            likedByMe={review.likedByMe}
             disableNavigation={true} // 클릭 막기
             onCommentSaved={() => reloadAll({ resetScroll: false})}
           />
@@ -165,6 +170,7 @@ const ReviewDetail = () => {
                 reviewId={review.reviewId ?? reviewId}
                 key={c.commentId}
                 comment={c}
+                likedByMe={c.likedByMe}
                 onCommentSaved={() => reloadAll({ resetScroll: false})}
               />
             ))}

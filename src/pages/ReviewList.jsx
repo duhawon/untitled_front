@@ -142,6 +142,7 @@ const ReviewList = () => {
                 date={"-"}
                 likeCount={r.likeCount}
                 replies={r.commentCount}
+                likedByMe={r.likedByMe}
               />
             </div>
           ))}

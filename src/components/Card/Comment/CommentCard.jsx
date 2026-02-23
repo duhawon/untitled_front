@@ -9,8 +9,8 @@ import { deleteReviewCommentApi } from '../../../api/reviewCommentApi';
 import { likeApi, unlikeApi } from '../../../api/likeApi';
 
 const TARGET_TYPE = "REVIEW_COMMENT";
-const CommentCard = ({ reviewId, comment, onCommentSaved }) => {
-  const [liked, setLiked] = useState(false);
+const CommentCard = ({ reviewId, comment, onCommentSaved, likedByMe }) => {
+  const [liked, setLiked] = useState(likedByMe);
   const [likes, setLikes] = useState(comment.likeCount ?? 0);
   
   const myUserId = useSelector((state) => state.auth.userInfo.userId);
@@ -22,7 +22,7 @@ const CommentCard = ({ reviewId, comment, onCommentSaved }) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
-
+  
   useEffect(() => {
     const onDocClick = (e) => {
       if (!menuRef.current) return;

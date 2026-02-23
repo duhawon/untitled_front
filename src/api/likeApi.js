@@ -17,7 +17,8 @@ export const likeApi = (targetType, targetId) => {
 }
 
 export const unlikeApi = (targetType, targetId) => {
+    console.log('targetTy[e : ', targetType, 'targetId : ' , targetId)
     return api.delete('/likes', {
-        targetType, targetId
+        data : {targetType, targetId}
     });
 }

@@ -271,6 +271,7 @@ const RoomDetail = () => {
                 likeCount={r.likeCount}
                 replies={r.commentCount}
                 isSummary={true}
+                likedByMe={r.likedByMe}
               />
             ))}
           </div>
