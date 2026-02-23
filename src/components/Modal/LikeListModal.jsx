@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { followApi, unfollowApi } from '../../api/followApi';
 import { getLikeUsersApi } from '../../api/likeApi';
 import CommonModal from "./CommonModal";
@@ -17,6 +18,8 @@ const LikeListModal = ({ isOpen, onClose, targetType, targetId }) => {
   })
   const scrollRef = useRef(null);
   const sentinelRef = useRef(null);
+  const myUserId = useSelector((state) => state.auth?.userInfo?.userId);
+
   
   const fetchLikeUsers = useCallback( async(page, mode) => {
     if (!isOpen || !targetId) return;
@@ -115,6 +118,8 @@ const LikeListModal = ({ isOpen, onClose, targetType, targetId }) => {
         <h2 className="like-list-title">좋아요한 사람들</h2>
         <div className="like-list-items" ref={scrollRef}>
           {likeSlice.content.map((data) => {
+            const userId = data.userSummary.userId;
+            const isMe = !!myUserId && userId === myUserId;
             return (
               <div key={data.userSummary.userId} className="like-list-item">
                 <div className="like-user-info">
@@ -125,13 +130,14 @@ const LikeListModal = ({ isOpen, onClose, targetType, targetId }) => {
                   />
                   <span className="like-user-name">{data.userSummary.name}</span>
                 </div>
-
-                <button
-                  className={`follow-btn ${data.followed ? "following" : ""}`}
-                  onClick={() => handleFollowClick(data.userSummary.userId, data.followed)}
-                >
-                  {data.followed ? "팔로잉" : "팔로우"}
-                </button>
+                {!isMe && (
+                  <button
+                    className={`follow-btn ${data.followed ? "following" : ""}`}
+                    onClick={() => handleFollowClick(data.userSummary.userId, data.followed)}
+                  >
+                    {data.followed ? "팔로잉" : "팔로우"}
+                  </button>
+                )}
               </div>
             );
           })}
