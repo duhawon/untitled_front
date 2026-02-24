@@ -1,0 +1,69 @@
+/* FollowListModal.css */
+
+.follow-list-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.follow-list-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.follow-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;      /* 모달 높이 제한 */
+  overflow-y: auto;       /* 스크롤 */
+  padding-right: 4px;     /* 스크롤바 여백 */
+}
+
+.follow-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.follow-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+
+.follow-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.follow-empty {
+  font-size: 13px;
+  color: #777;
+  text-align: center;
+  padding: 18px 0;
+}
+
+.follow-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+}
+
+.follow-more-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.follow-more-btn:hover {
+  background: #f7f7f7;
+}

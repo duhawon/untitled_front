@@ -8,6 +8,7 @@ import { presignUserProfileApi, updateMyProfileImageApi } from '../api/uploadApi
 import { uploadToS3ByPresignedUrl } from '../api/s3Upload';
 import { updateUserInfo } from '../store/actions/authActions';
 import { getMyProfileApi } from '../api/userApi';
+import FollowListModal from '../components/Modal/FollowListModal'
 
 // 날짜별 포스터 데이터 예시
 const escapeRoomData = {
@@ -25,6 +26,19 @@ const Profile = () => {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [profile, setProfile] = useState(null);
+    
+    const [followModalOpen, setFollowModalOpen] = useState(false);
+    const [followType, setFollowType] = useState('followers');
+
+    const openFollowers = () => {
+        setFollowType('followers');
+        setFollowModalOpen(true);
+    };
+
+    const openFollowings = () => {
+        setFollowType('followings');
+        setFollowModalOpen(true);
+    };
 
     useEffect(() => {
         let cancelled = false;
@@ -163,7 +177,13 @@ const Profile = () => {
                         <h2 className="profile-name">{profile.name}</h2>
                         <p className="profile-email">{profile.email}</p>
                         <p className="profile-follow">
-                            팔로워 {profile.followers} | 팔로잉 {profile.following}
+                        <button type="button" className="follow-link" onClick={openFollowers}>
+                            팔로워 {profile.followers}
+                        </button>
+                        |
+                        <button type="button" className="follow-link" onClick={openFollowings}>
+                            팔로잉 {profile.following}
+                        </button>
                         </p>
                         {errorMsg && <p className="profile-error">{errorMsg}</p>}
                     </div>
@@ -222,6 +242,12 @@ const Profile = () => {
                         onClickCentury={() => {}}
                     />
                 </div>
+                <FollowListModal
+                    isOpen={followModalOpen}
+                    onClose={() => setFollowModalOpen(false)}
+                    userId={profile.userId}
+                    type={followType}
+                />
             </div>
         </Layout>
     );
