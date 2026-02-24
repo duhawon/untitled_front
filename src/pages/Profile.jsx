@@ -1,12 +1,13 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Layout from '../components/Layout/Layout';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './Profile.css';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { presignUserProfileApi, updateMyProfileImageApi } from '../api/uploadApi';
 import { uploadToS3ByPresignedUrl } from '../api/s3Upload';
 import { updateUserInfo } from '../store/actions/authActions';
+import { getMyProfileApi } from '../api/userApi';
 
 // 날짜별 포스터 데이터 예시
 const escapeRoomData = {
@@ -17,17 +18,37 @@ const escapeRoomData = {
 
 const Profile = () => {
     const [date, setDate] = useState(new Date());
-    const userInfo = useSelector((state) => state.auth.userInfo);
 
     const dispatch = useDispatch();
     const fileInputRef = useRef(null);
     const [isUploading, setIsUploading] = useState(false);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+    const [profile, setProfile] = useState(null);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const load = async () => {
+            try {
+                const res = await getMyProfileApi();
+                if (cancelled) return;
+                setProfile(res.data);
+                dispatch(updateUserInfo({
+                    profileImgUrl: res.data.profileImgUrl
+                }));
+            } catch(e) {
+                if (cancelled) return;
+                
+            }
+        };
+        load();
+        return () => {cancelled = true;};
+    }, [dispatch]);
 
     const currentProfileUrl = useMemo(() => {
-        return previewUrl || userInfo?.profileImgUrl || '/default-profile.png';
-    },[previewUrl, userInfo]);
+        return previewUrl || profile?.profileImgUrl || '/default-profile.png';
+    },[previewUrl, profile]);
     
     const openFilePicker = () => {
         if(isUploading) return;
@@ -76,6 +97,10 @@ const Profile = () => {
             dispatch(updateUserInfo({
                 profileImgUrl: publicUrl
             }));
+            setProfile(prev => prev ? {
+                ...prev,
+                profileImgUrl: publicUrl,
+            } : prev)
             setPreviewUrl(null);
         } catch(e) {
             setPreviewUrl(null);
@@ -101,7 +126,16 @@ const Profile = () => {
         }
         return null;
     };
-
+    if (!profile) {
+        return (
+          <Layout>
+            <div className="profile-card">
+              <p>프로필 불러오는 중...</p>
+              {errorMsg && <p className="profile-error">{errorMsg}</p>}
+            </div>
+          </Layout>
+        );
+      }
     return (
         <Layout>
             <div className="profile-card">
@@ -126,10 +160,10 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="profile-info-text">
-                        <h2 className="profile-name">{userInfo.name}</h2>
-                        <p className="profile-email">{userInfo.email}</p>
+                        <h2 className="profile-name">{profile.name}</h2>
+                        <p className="profile-email">{profile.email}</p>
                         <p className="profile-follow">
-                            팔로워 {userInfo.followers} | 팔로잉 {userInfo.following}
+                            팔로워 {profile.followers} | 팔로잉 {profile.following}
                         </p>
                         {errorMsg && <p className="profile-error">{errorMsg}</p>}
                     </div>
@@ -139,12 +173,12 @@ const Profile = () => {
 
                 <div className="profile-stats">
                     <div className="stat-item">
-                        <p className="stat-number">{userInfo.reviews}</p>
+                        <p className="stat-number">{profile.reviews}</p>
                         <p className="stat-text">평가</p>
                     </div>
                     <div className="stat-divider"></div>
                     <div className="stat-item">
-                        <p className="stat-number">{userInfo.comments}</p>
+                        <p className="stat-number">{profile.comments}</p>
                         <p className="stat-text">코멘트</p>
                     </div>
                 </div>
