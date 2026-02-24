@@ -125,16 +125,12 @@ const RoomDetail = () => {
   };
   const handleReviewButtonClick = () => {
     if (!isLoggedIn) {
-      // 원하면 여기서 GuestAuthModal 열기
-      // setIsGuestAuthOpen(true);
       return;
     }
   
-    if (myReview?.reviewId) {
-      // 내 리뷰가 있으면 작은 메뉴 토글
+    if (myReview?.reviewId && myReview?.content?.trim()) {
       setIsReviewMenuOpen((v) => !v);
     } else {
-      // 없으면 작성 모달 바로
       setIsReviewModalOpen(true);
     }
   };
@@ -146,10 +142,6 @@ const RoomDetail = () => {
   
   const handleDeleteReview = async () => {
     if (!myReview?.reviewId) return;
-    // TODO : modal창으로 변경
-    const ok = window.confirm("리뷰를 삭제하시겠습니까?");
-    if (!ok) return;
-  
     setIsReviewMenuOpen(false);
     try {
       await deleteReviewApi(myReview.reviewId);
@@ -181,7 +173,7 @@ const RoomDetail = () => {
         {/* 상단 포스터 + 정보 */}
         <div className="room-top-row">
           <div className="poster-wrap">
-            <img src="https://picsum.photos/300/200?random=10" alt="방탈출 포스터" className="poster-img" />
+            <img src={room.posterImgUrl} alt="방탈출 포스터" className="poster-img" />
           </div>
 
           <div className="info-wrap">
@@ -202,7 +194,7 @@ const RoomDetail = () => {
               </div>
               <div className="rating-right">
                 <div className="rating-score-main">{avgRating}</div>
-                <div className="avg-label">평균별점 (1,234명)</div>
+                <div className="avg-label">평균별점 ({room.ratingCount}명)</div>
               </div>
             </div>
 
@@ -214,7 +206,7 @@ const RoomDetail = () => {
                 💬 리뷰
               </button>
 
-              {isReviewMenuOpen && myReview?.reviewId && (
+              {isReviewMenuOpen && myReview?.reviewId && myReview?.content?.trim() && (
                 <div className="review-popover">
                   <button className="review-popover-item" onClick={handleEditReview}>
                     리뷰 수정
@@ -230,12 +222,12 @@ const RoomDetail = () => {
               </button>
             </div>
             <hr className="detail-hr" />
-            {myReview?.reviewId && (
-  <div className="my-review-wrapper">
-    <div className="my-review-title">내가 쓴 리뷰</div>
-    <div className="my-review-content-bar">{myReview.content}</div>
-  </div>
-)}
+            {myReview?.reviewId && myReview?.content?.trim() && (
+              <div className="my-review-wrapper">
+                <div className="my-review-title">내가 쓴 리뷰</div>
+                <div className="my-review-content-bar">{myReview.content}</div>
+              </div>
+            )}
             <div className="info-grid">
               <div className="info-item">장르: {genresText}</div>
               <div className="info-item">난이도: {room?.difficulty ?? "-"}</div>

@@ -268,62 +268,53 @@
   white-space: pre-line;
   margin-bottom: 10px;
 }
+.review-action-wrap {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+.review-action-wrap .action-btn {
+  width: 100%;
+}
 /* 팝오버 박스: 메뉴처럼 */
 .review-popover {
   position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 6px;
+  top: calc(100% + 8px);       /* ✅ 버튼 아래로 */
+  right: 0;                    /* ✅ 오른쪽 정렬(원하면 left:0로) */
   z-index: 9999;
 
-  min-width: 160px;
+  min-width: 120px;
   background: #fff;
-  border: 1px solid #e7e7e7;
+  border: 1px solid #e5e5e5;
   border-radius: 12px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
   padding: 6px;
-
-  display: flex;          /* ✅ 세로 2행 */
-  flex-direction: column; /* ✅ */
-  gap: 4px;               /* ✅ 버튼 사이 간격 */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
 
 /* 메뉴 아이템 버튼: 더 예쁘게 */
 .review-popover-item {
   width: 100%;
+  border: none;
+  background: transparent;
+  padding: 10px 10px;
   text-align: left;
-  padding: 10px 12px;
-  border: 0;
-  background: #fafafa;      /* ✅ 버튼 배경 */
   cursor: pointer;
   border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #222;
-
-  display: flex;            /* ✅ 텍스트 정렬 안정 */
-  align-items: center;
-  justify-content: flex-start;
-
-  transition: transform 0.08s ease, background 0.12s ease;
+  font-size: 13px;
 }
-
 .review-popover-item:hover {
-  background: #f1f1f1;
+  background: #f4f4f4;
 }
 
-.review-popover-item:active {
-  transform: scale(0.98);
-}
-
-/* 삭제 버튼만 강조 */
 .review-popover-item.danger {
-  background: #fff5f5;
   color: #d32f2f;
 }
-
 .review-popover-item.danger:hover {
-  background: #ffecec;
+  background: #fff1f1;
+}
+.review-popover-item:active {
+  transform: scale(0.98);
 }
 
 .my-review-wrapper {

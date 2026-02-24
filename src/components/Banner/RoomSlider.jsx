@@ -71,7 +71,7 @@ const RoomSlider = () => {
               style={{ flex: `0 0 calc(100% / ${slidesToShow})` }}
             >
               <BannerCard
-                img={room.img}
+                img={room.posterImgUrl}
                 title={room.name}
                 rating={room.rating}
                 rank={startIdx + idx + 1} // ⭐ 순위 표시

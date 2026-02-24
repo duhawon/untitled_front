@@ -9,7 +9,6 @@ const TARGET_TYPE = "REVIEW";
 const ReviewCard = ({
   reviewId,
   user,
-  userImg,
   score,
   text,
   likeCount,
@@ -63,7 +62,7 @@ const ReviewCard = ({
         <div className="review-card-header">
           <div className="user-info">
             <img
-              src={userImg || "https://picsum.photos/40"}
+              src={user.profileImgUrl ?? "/default-profile.png"}
               alt={user}
               className="user-img"
             />

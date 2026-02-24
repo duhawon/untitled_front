@@ -73,8 +73,7 @@ const CommentCard = ({ reviewId, comment, onCommentSaved, likedByMe }) => {
     <div className="comment-card">
       {/* 프로필 이미지 */}
       <img
-        src={comment.userSummary?.profileImgUrl}
-        alt={comment.userSummary?.name ?? "unknown"}
+        src={comment.userSummary?.profileImgUrl || "/default-profile.png"}
         className="comment-user-img" />
 
       <div className="comment-content">

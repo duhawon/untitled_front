@@ -124,7 +124,7 @@ const LikeListModal = ({ isOpen, onClose, targetType, targetId }) => {
               <div key={data.userSummary.userId} className="like-list-item">
                 <div className="like-user-info">
                   <img
-                    src={data.userSummary.profileImgUrl || "https://picsum.photos/40"}
+                    src={data.userSummary.profileImgUrl || "/default-profile.png"}
                     alt={data.userSummary.name}
                     className="like-user-img"
                   />
